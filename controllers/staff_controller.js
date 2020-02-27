@@ -51,7 +51,37 @@ const submitStaff = async (req, res)=> {
             });
         }
 
+        const deleteStaff = async ( req, res)=> {
+            let id = req.params.id;
+            await staffModel.findByIdAndRemove({_id: id}).then(()=> {
+                res.status(200).send({msg:'deleted successful'});
+            });
+        }
+
+        const penalizeStaff = async (req, res)=> {
+            console.log(req.body);
+            let userId = req.body.id;
+            let amount = req.body.values.amount;
+            let reason = req.body.values.reason;
+            // console.log(amount);
+            // console.log(reason);
+         await staffModel.findById({_id:userId}).then((user)=> {
+                user.penalty = user.penalty + amount;
+                user.offence = reason;
+                user.save().then(()=> {
+                    res.status(200).send({msg: 'success'});
+                });
+            });
+        }
+
+        const getAllPenalize = async (req, res)=> {
+            await staffModel.find({penalty :{$gt:0}}).then((users)=>{
+                res.status(200).send({users:users});
+            });
+        }
 
 
 
-module.exports = { submitStaff, getAllStaff, getStaffByCategory}
+
+module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, deleteStaff,
+                getAllPenalize}

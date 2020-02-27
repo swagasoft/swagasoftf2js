@@ -4,6 +4,7 @@ const indexController = require('../controllers/index-controller');
 const userController = require('../controllers/user_controller');
 const OutletController = require('../controllers/outlet-controller');
 const staffController =  require('../controllers/staff_controller');
+const productController = require('../controllers/distribute-control');
 
 const jwt_helper = require('../config/jwt_helper');
 const mongoose  = require('mongoose');
@@ -37,7 +38,12 @@ router.get('/delete-credit:id', jwt_helper.verifyJwtToken, checkValidUser, userC
 router.post('/submit-staff', jwt_helper.verifyJwtToken,checkValidUser,staffController.submitStaff);
 router.get('/get-all-staff', jwt_helper.verifyJwtToken, checkValidUser,staffController.getAllStaff);
 router.get('/select-staff-depart:cat',jwt_helper.verifyJwtToken, checkValidUser, staffController.getStaffByCategory);
-
+router.get('/delete-staff:id', jwt_helper.verifyJwtToken, checkValidUser,staffController.deleteStaff);
+router.post('/penalize-staff', jwt_helper.verifyJwtToken,checkValidUser, staffController.penalizeStaff);
+router.get('/get-all-penalty', jwt_helper.verifyJwtToken,checkValidUser, staffController.getAllPenalize);
+router.post('/submit-prod', jwt_helper.verifyJwtToken, checkValidUser,productController.submitProd);
+router.get('/get-production', jwt_helper.verifyJwtToken,checkValidUser, productController.getProduction);
+router.post('/submit-bad-stock', jwt_helper.verifyJwtToken,checkValidUser,productController.sumbitBadStock)
 
  function checkValidUser(req, res, next){
      const userID = req._id;
