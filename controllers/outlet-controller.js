@@ -34,11 +34,8 @@ const createOutlet = async(req, res)=> {
                   }else{
                     res.status(422).send({msg : 'error in form values'});
                   }
-               
               }
         });
-       
-
 }
 
 const getAll = async (req, res)=> {
@@ -57,6 +54,13 @@ const deleteOutlet =  async (req, res)=> {
     res.status(200).send({msg:'outlet has been deleted'});
   }
 
+  const findOutletbyId = async (req, res) =>{
+    OutletModel.findById({_id: req.params.id}).then((outlet)=> {
+      res.status(200).send({outlet: outlet});
+    });
+   
+  }
+
   const searcOutlet = async(req, res)=> {
     console.log('file',req.body);
     const name = req.body.search;
@@ -70,9 +74,11 @@ const deleteOutlet =  async (req, res)=> {
       const fileID = req.params.id;
       OutletModel.findById({_id: fileID},(err, doc)=> {
           res.status(200).send({doc : doc });
-      })
+      });
   }
 
 
 
-module.exports = { createOutlet, getAll, deleteOutlet ,editOutlet, searcOutlet }
+
+module.exports = { createOutlet, getAll, deleteOutlet ,editOutlet, searcOutlet,
+            findOutletbyId }

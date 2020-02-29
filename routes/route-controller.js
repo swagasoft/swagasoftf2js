@@ -44,6 +44,9 @@ router.get('/get-all-penalty', jwt_helper.verifyJwtToken,checkValidUser, staffCo
 router.post('/submit-prod', jwt_helper.verifyJwtToken, checkValidUser,productController.submitProd);
 router.get('/get-production', jwt_helper.verifyJwtToken,checkValidUser, productController.getProduction);
 router.post('/submit-bad-stock', jwt_helper.verifyJwtToken,checkValidUser,productController.sumbitBadStock)
+router.get('/find-outlet:id', jwt_helper.verifyJwtToken,checkValidUser,OutletController.findOutletbyId);
+router.post('/supply-outlet', jwt_helper.verifyJwtToken, checkValidUser,productController.supplyOutlet);
+router.get('/close-record:id', jwt_helper.verifyJwtToken,checkValidUser,productController.closeRecord);
 
  function checkValidUser(req, res, next){
      const userID = req._id;

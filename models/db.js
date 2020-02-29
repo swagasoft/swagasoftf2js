@@ -15,4 +15,5 @@ require('./expense_list');
 require('./expense_credit');
 require('./staff_model');
 require('./prod_model');
+require('./supply_model');
 
