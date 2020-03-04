@@ -29,7 +29,7 @@ var userSchema = mongoose.Schema({
     role: {
         required: true,
         type: String,
-        enum : ['DIRECTOR','ADMIN','MANAGER']
+        enum : ['DIRECTOR','ADMIN','MANAGER','DILIGENT','SPECIAL']
     } ,
     active: {
         type: Boolean,

@@ -25,6 +25,9 @@ const createOutlet = async(req, res)=> {
         newModel.slg_max = req.body.slg_max;
         newModel.axis = req.body.axis;
         newModel.location = req.body.location;
+        newModel.merchant_rate = req.body.merchant_rate;
+     
+        newModel.admin = req.body.admin; 
         newModel.save((err, docs)=> {
             if(!err){
                 res.status(200).send({msg: "registration successful..."});
@@ -32,6 +35,7 @@ const createOutlet = async(req, res)=> {
                   if(err.code === 11000){
                     res.status(422).send({msg : "outlet given 'CODE' already exist"});
                   }else{
+                    console.log(err);
                     res.status(422).send({msg : 'error in form values'});
                   }
               }

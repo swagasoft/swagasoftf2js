@@ -2,74 +2,45 @@ const mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 
 var staffSchema = mongoose.Schema({
-    fullname: {
-        type: String,
-        required: true,
+    fullname: { type: String, required: true,
     },
-     phone: {
-        type: String,
+     phone: { type: String,
     },
-      address: {
-        type: String,
+      address: { type: String,
     },  
   
-    bankAccountName: {
-        type: String,
-        required: true
+    bankAccountName: { type: String, required: true
     },
-     bankNumber: {
-        type: String,
-        required: true, 
-        unique: true
+     bankNumber: { type: String, required: true,  unique: true
     },
-     bankAccountType: {
-        type: String,
-        required: true,
+     bankAccountType: { type: String, required: true,
     },
-     salary: {
-        type: Number,
-        default: 0
+     salary: { type: Number, default: 0
     }, 
-    department: {
-        type: String,
-        required: true
+    department: { type: String, required: true
     },
-     created_at: {
-        type: Date,
-        default : Date.now()
+     created_at: {type: Date, default : Date.now()
     },
-    sacked: {
-        type: Boolean,
-        default: false
+    sacked: { type: Boolean, default: false
     },
-      penalty: {
-        type: Number,
-        default: 0
+      penalty: { type: Number, default: 0
     },
-     offence: {
-        type: String,
-        default: 'null'
+     offence: { type: String,  default: 'null'
     },
-     offence_info: {
-        type: String,
-        default: 'null'
+     offence_info: { type: String, default: 'null'
     },
     
-    savings: {
-        type: Number,
-        default: 0
+    savings: { type: Number, default: 0
     },
-    advance_salary: {
-        type: Number,
-        default: 0
+    advance_salary: { type: Number,  default: 0
     },
-    bonus: {
-        type: Number,
-        default: 0
+    edited: { type: Number, default: 0
     },
-     AmountPaid: {
-        type: Number,
-        default: 0
+    admin: { type: String, required: true
+    },
+    bonus: { type: Number, default: 0
+    },
+     AmountPaid: { type: Number, default: 0
     },
 
 });

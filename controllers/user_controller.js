@@ -183,11 +183,18 @@ const login = (req, res, done)=> {
       })
     }
 
-    const deleteExpense = async (req, res)=> {
-      let docID = req.params.id;
-      console.log('delte',docID);
-      expenseListModel.findByIdAndRemove({_id:docID}).then(()=> {
-        res.status(200).send({msg:'document deleted successfully'});
+    const reverseExpense = async (req, res)=> {
+        console.log(req.body);
+        let currentUser = req.body.admin;
+
+     await expenseListModel.findById({_id:req.body.id}).then((doc)=> {
+        doc.verified = false;
+        doc.save().then(()=> {
+          res.status(200).send({msg:'expense reversed success'});
+        })
+        
+    
+       
       });
     }
 
@@ -203,7 +210,41 @@ const login = (req, res, done)=> {
       console.log(cat);
       expenseListModel.find({verified: cat},(err, expenses)=> {
         res.status(200).send({expenses});
-      })
+      });
+    }
+
+    const searcExpense = async(req, res)=> {
+      console.log('file',req.body);
+      const search = req.body.search;
+     await expenseListModel.find({"information": {$regex: search, $options:"i"}}, (err, expenses)=> {
+        res.status(200).send({expenses});
+      });
+  
+    }
+
+    const getUserDetails = async (req, res)=> {
+     await UserModel.findById({_id:req._id}).then((user)=> {
+        if(user){
+          res.status(200).send({user: user});
+        }else{
+          res.status(404).send({msg:'user not found!'});
+        }
+      });
+    }
+
+    const resetPassword = async (req, res)=> {
+      let crypePassword = cryptr.encrypt(req.body.values.password);
+      UserModel.findById({_id:req._id}).then((user)=> {
+        if(user){
+          user.password = crypePassword;
+          user.save().then(()=> {
+            res.status(200).send({msg: 'PASSWORD HAS BEEN CHANGED!'})
+          });
+        }else{
+          res.status(422).send({msg:'error while trying to change password!'})
+        }
+      });
+     
     }
 
 
@@ -211,4 +252,5 @@ const login = (req, res, done)=> {
 
 module.exports = {activateUser, login, createUser, getAllUsers, getCredit,
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
-  getExpense, getBalance, verifyExpense, deleteExpense, selectExpenseByCat}
+  getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,
+  searcExpense, getUserDetails, resetPassword}

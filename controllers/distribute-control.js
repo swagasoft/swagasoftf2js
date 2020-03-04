@@ -7,7 +7,11 @@ const SupplyModel = mongoose.model('supply_list');
 
 
 const submitProd = async (req, res)=> {
-    await prodModel.findOne({close:true}).sort({created_at:1}).then((record)=> {
+    await prodModel.findOne({close : false}).sort({created_at:1}).then((record)=> {
+        if(record){
+            res.status(422).send({msg:'open record already exit'});
+        }else{
+     prodModel.findOne({close:true}).sort({created_at:1}).then((record)=> {
         if(record){
             var newProd = new prodModel();
             newProd.open_p = record.bal_p;
@@ -49,6 +53,9 @@ const submitProd = async (req, res)=> {
         }
         
    
+        });
+        // end create
+            }
         });
         }
 
@@ -100,6 +107,14 @@ const supplyOutlet = async (req, res)=> {
     newSupply.carrot = req.body.carrot;
     newSupply.sugarcane = req.body.sugarcane;
     newSupply.slg = req.body.slg;
+
+    newSupply.o_samp = req.body.o_samp;
+    newSupply.w_samp = req.body.w_samp;
+    newSupply.t_samp = req.body.t_samp;
+    newSupply.p_samp = req.body.p_samp;
+    newSupply.c_samp = req.body.c_samp;
+    newSupply.s_samp = req.body.s_samp;
+    newSupply.slg_samp = req.body.slg_samp;
     newSupply.admin = req.body.admin;
     newSupply.outlet = req.body.outlet;
     newSupply.axis = req.body.axis;
@@ -113,14 +128,22 @@ const supplyOutlet = async (req, res)=> {
             doc.prod_c = doc.prod_c - req.body.carrot;
             doc.prod_s = doc.prod_s - req.body.sugarcane;
             doc.prod_slg = doc.prod_slg - req.body.slg;
+
+            doc.prod_p = doc.prod_p - req.body.p_samp;
+            doc.prod_o = doc.prod_o - req.body.o_samp;
+            doc.prod_w = doc.prod_w - req.body.w_samp;
+            doc.prod_t = doc.prod_t - req.body.t_samp;
+            doc.prod_c = doc.prod_c - req.body.c_samp;
+            doc.prod_s = doc.prod_s - req.body.s_samp;
+            doc.prod_slg = doc.prod_slg - req.body.slg_samp;
             
-            doc.sup_p += req.body.pineapple;
-            doc.sup_o += req.body.orange;
-            doc.sup_w +=  req.body.watermelon;
-            doc.sup_t += req.body.tigernut;
-            doc.sup_c +=  req.body.carrot;
-            doc.sup_s +=  req.body.sugarcane;
-            doc.sup_slg += req.body.slg;
+            doc.sup_p += req.body.pineapple + req.body.p_samp;
+            doc.sup_o += req.body.orange + req.body.o_samp;
+            doc.sup_w +=  req.body.watermelon + req.body.w_samp;
+            doc.sup_t += req.body.tigernut + req.body.p_samp;
+            doc.sup_c +=  req.body.carrot +req.body.c_samp;
+            doc.sup_s +=  req.body.sugarcane + req.body.s_samp;;
+            doc.sup_slg += req.body.slg + req.body.slg_samp;
             doc.save().then(()=> {
                 res.status(200).send({msg:'record submitted successful'});
             }).catch((err)=>{
