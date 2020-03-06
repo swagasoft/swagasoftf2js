@@ -44,6 +44,8 @@ const submitStaff = async (req, res)=> {
              });  
         }
 
+        // allSettledStaff({})
+
         const getStaffByCategory = async (req, res)=> {
             let cat = req.params.cat;
             await   staffModel.find({department:cat}).then((staffs)=> {
@@ -244,10 +246,46 @@ const submitStaff = async (req, res)=> {
 
       }
 
+    const  settleSalary = async (req, res)=> {
+        console.log(req.body);
+        staffModel.findById({_id:req.body.id}).then((staff)=> {
+            staff.salary = req.body.salary;
+            staff.bonus = req.body.bonus;
+            staff.penalty = req.body.penalty;
+            staff.savings = req.body.savings;
+            staff.savings = req.body.savings;
+            staff.advance_salary = req.body.salary_adv;
+            staff.AmountPaid = req.body.amountPaid;
+            staff.settled = true;
+            staff.not_paid = false;
+            staff.save().then(()=>{
+                res.status(200).send({msg:'successful!'})
+            });
+        });
+    }
+
+    const notPaid = async (req, res)=> {
+        const fileId = req.params.id;
+        console.log(fileId);
+        staffModel.findById({_id: fileId}).then((staff)=> {
+            if(staff){
+                staff.not_paid = true;
+                staff.settled = false;
+            staff.save().then((user)=> {
+                console.log(user);
+                res.status(200).send({msg: ' success'});
+            })
+            } else{
+                res.status(200).send({msg:' error processing user!'});
+            }
+            
+        });
+    }
+
 
 
 
 module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, deleteStaff,
                 getAllPenalize, salaryAdvance, getSalaryAdv, FindSalaryAdvByDate,
             editSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
-        searchPenalty, searchSalaryAdv}
+        searchPenalty, searchSalaryAdv, settleSalary, notPaid}

@@ -36,7 +36,11 @@ var staffSchema = mongoose.Schema({
     },
     edited: { type: Number, default: 0
     },
-    admin: { type: String, required: true
+    admin: { type: String
+    },
+    settled :{type: Boolean , default: false
+    },
+    not_paid :{type: Boolean , default: false
     },
     bonus: { type: Number, default: 0
     },

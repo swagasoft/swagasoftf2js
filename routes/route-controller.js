@@ -60,7 +60,8 @@ router.get('/wave-penalty:id', jwt_helper.verifyJwtToken, staffController.wavePe
 router.get('/delete-penalty:id', jwt_helper.verifyJwtToken,staffController.deletePenalty);
 router.post('/search-penalty', jwt_helper.verifyJwtToken,staffController.searchPenalty);
 router.post('/search-adv-salary', jwt_helper.verifyJwtToken,staffController.searchSalaryAdv);
-
+router.post('/settle-salary', jwt_helper.verifyJwtToken, staffController.settleSalary);
+router.get('/not-paid:id', jwt_helper.verifyJwtToken, staffController.notPaid);
 
  function checkValidity(req, res, next){
      const userID = req._id;
