@@ -4,6 +4,7 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
 const fetch = require("node-fetch");
 const lodash = require("lodash");
+var moment = require('moment');
 const expenseAccountModel = mongoose.model('account');
 const expenseListModel = mongoose.model('expense_list');
 const creditModel = mongoose.model('credit');
@@ -247,10 +248,28 @@ const login = (req, res, done)=> {
      
     }
 
+    const findExpensebyDate = async (req, res)=> {
+      console.log(req.body);
+      let queryDate = "";
+      let dayString = req.body.dp.day.toString();
+      let yearString = req.body.dp.year.toString();
+      let monthString = req.body.dp.month.toString();
+      queryDate = monthString +'/'+dayString+'/'+yearString;
+      console.log('dateee',queryDate);
+      await expenseListModel.find({day : queryDate}).then((expenses)=>{
+          console.log(expenses);
+          if(expenses.length == 0){
+              res.status(404).send({msg:'no record for this day!'});
+          }else{
+              res.status(200).send({expenses: expenses});
+          }
+      })
+    }
+
 
 
 
 module.exports = {activateUser, login, createUser, getAllUsers, getCredit,
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
   getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,
-  searcExpense, getUserDetails, resetPassword}
+  searcExpense, getUserDetails, resetPassword,findExpensebyDate }

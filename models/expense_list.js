@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var moment = require('moment');
 
 var expenseList = mongoose.Schema({
     balance: {
@@ -38,6 +39,9 @@ var expenseList = mongoose.Schema({
         type: Date,
        required: true
     },
+    day : {
+        type: String,   default:moment().format('l')
+    }
 
 });
 

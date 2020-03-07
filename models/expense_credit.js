@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var moment = require('moment');
 
 var creditSchema = mongoose.Schema({
     balance: {
@@ -10,6 +11,9 @@ var creditSchema = mongoose.Schema({
         type: Date,
         default : Date.now()
     },
+    day : {
+        type: String,   default:moment().format('l')
+    }
 
 });
 

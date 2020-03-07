@@ -171,16 +171,12 @@ const submitStaff = async (req, res)=> {
 
 
     const FindSalaryAdvByDate = async (req, res)=> {
-        console.log(req.body);
         let queryDate = "";
-        console.log(typeof(req.body.day));
         let dayString = req.body.day.toString();
         let yearString = req.body.year.toString();
         let monthString = req.body.month.toString();
         queryDate = monthString +'/'+dayString+'/'+yearString;
-        console.log('dateee',queryDate);
         await salaryAdvModel.find({day : queryDate}).then((users)=>{
-            console.log(users);
             if(users.length == 0){
                 res.status(404).send({msg:'no record for this day!'});
             }else{
@@ -282,10 +278,29 @@ const submitStaff = async (req, res)=> {
         });
     }
 
+    const searchStaff = async (req, res)=> {
+        console.log(req.body);
+        const search = req.body.search;
+        staffModel.find({"fullname": {$regex: search, $options:"i"}}, (err, staff)=> {
+           
+            res.status(200).send({staff: staff});
+          });
+    }
+
+    const getAllPayout = async (req, res)=> {
+        await staffModel.find({settled: true}).then((payout)=> {
+            if(payout.length == 0){
+                res.status(404).send({msg: ' No record!'});
+            }else{
+                res.status(200).send({payout:payout});
+            }
+        });
+    }
+
 
 
 
 module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, deleteStaff,
                 getAllPenalize, salaryAdvance, getSalaryAdv, FindSalaryAdvByDate,
             editSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
-        searchPenalty, searchSalaryAdv, settleSalary, notPaid}
+        searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout}

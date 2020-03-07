@@ -5,6 +5,7 @@ const userController = require('../controllers/user_controller');
 const OutletController = require('../controllers/outlet-controller');
 const staffController =  require('../controllers/staff_controller');
 const productController = require('../controllers/distribute-control');
+const fruitController = require('../controllers/fruit_controller');
 
 const jwt_helper = require('../config/jwt_helper');
 const mongoose  = require('mongoose');
@@ -31,6 +32,7 @@ router.get('/get-expenses', jwt_helper.verifyJwtToken, userController.getExpense
 router.get('/get-credit', jwt_helper.verifyJwtToken, userController.getCredit);
 router.get('/get-balance', jwt_helper.verifyJwtToken, userController.getBalance);
 router.get('/verify-expense:id', jwt_helper.verifyJwtToken,  userController.verifyExpense);
+router.post('/find-by-date', jwt_helper.verifyJwtToken, userController.findExpensebyDate);
 router.get('/select-expense:cat', jwt_helper.verifyJwtToken, userController.selectExpenseByCat);
 router.post('/reverse-expense', jwt_helper.verifyJwtToken, userController.reverseExpense);
 router.get('/delete-credit:id', jwt_helper.verifyJwtToken, userController.deleteCredit);
@@ -62,6 +64,12 @@ router.post('/search-penalty', jwt_helper.verifyJwtToken,staffController.searchP
 router.post('/search-adv-salary', jwt_helper.verifyJwtToken,staffController.searchSalaryAdv);
 router.post('/settle-salary', jwt_helper.verifyJwtToken, staffController.settleSalary);
 router.get('/not-paid:id', jwt_helper.verifyJwtToken, staffController.notPaid);
+router.get('/get-all-payout', jwt_helper.verifyJwtToken, staffController.getAllPayout);
+router.post('/search-staff-name', jwt_helper.verifyJwtToken, staffController.searchStaff);
+router.post('/submit-fruit', jwt_helper.verifyJwtToken,fruitController.registerFruit );
+router.get('/get-fruit-record', jwt_helper.verifyJwtToken,fruitController.getFruitRecord );
+
+
 
  function checkValidity(req, res, next){
      const userID = req._id;
