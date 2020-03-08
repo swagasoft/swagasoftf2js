@@ -68,6 +68,9 @@ router.get('/get-all-payout', jwt_helper.verifyJwtToken, staffController.getAllP
 router.post('/search-staff-name', jwt_helper.verifyJwtToken, staffController.searchStaff);
 router.post('/submit-fruit', jwt_helper.verifyJwtToken,fruitController.registerFruit );
 router.get('/get-fruit-record', jwt_helper.verifyJwtToken,fruitController.getFruitRecord );
+router.get('/set-payment-false:id', jwt_helper.verifyJwtToken, staffController.setPaymentFalse);
+router.get('/set-payment-true:id', jwt_helper.verifyJwtToken, staffController.setPaymentTrue);
+router.get('/select-payout-depart:cat', jwt_helper.verifyJwtToken, staffController.payOutByDepartment);
 
 
 

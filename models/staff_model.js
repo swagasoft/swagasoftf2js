@@ -21,16 +21,13 @@ var staffSchema = mongoose.Schema({
     },
      created_at: {type: Date, default : Date.now()
     },
-    sacked: { type: Boolean, default: false
-    },
       penalty: { type: Number, default: 0
     },
-     offence: { type: String,  default: 'null'
-    },
-     offence_info: { type: String, default: 'null'
-    },
-    
     savings: { type: Number, default: 0
+    },
+    give: { type: Number, default: 0
+    },
+    penalize: { type: Boolean, default: false
     },
     advance_salary: { type: Number,  default: 0
     },

@@ -53,6 +53,15 @@ const submitStaff = async (req, res)=> {
             });
         }
 
+        const payOutByDepartment = async (req, res)=> {
+            let cat = req.params.cat;
+            console.log(cat);
+            staffModel.find({$and:[{department:cat},{settled:true}]}).then((staff)=> {
+                console.log(staff);
+                res.status(200).send({staff: staff});
+            })
+        }
+
         const deleteStaff = async ( req, res)=> {
             let id = req.params.id;
             await staffModel.findByIdAndRemove({_id: id}).then(()=> {
@@ -66,6 +75,7 @@ const submitStaff = async (req, res)=> {
             let amount = req.body.values.amount;
             let reason = req.body.values.reason;
             let admin = req.body.admin;
+            await staffModel.findByIdAndUpdate({_id:userId},{penalize:true});
                 staffModel.findById({_id:userId}).then((user)=> {
                     var newPenalty = new penaltyModel();
                     newPenalty.amount = amount;
@@ -96,7 +106,13 @@ const submitStaff = async (req, res)=> {
                 newSalaryAdv.admin = admin;
                 newSalaryAdv.reason = reason;
                 newSalaryAdv.save().then(()=> {
-                    res.status(200).send({msg: 'success'});
+                    staffModel.findById({_id:userId}).then((staff)=> {
+                        staff.advance_salary += parseInt(amount);
+                        staff.save(()=>{
+                            res.status(200).send({msg: 'success'});
+                        })
+                    });
+                  
                 })
             }).catch((err)=> {
                 res.status(422).send({msg:'error saving document!'});
@@ -250,6 +266,7 @@ const submitStaff = async (req, res)=> {
             staff.penalty = req.body.penalty;
             staff.savings = req.body.savings;
             staff.savings = req.body.savings;
+            staff.give = req.body.give;
             staff.advance_salary = req.body.salary_adv;
             staff.AmountPaid = req.body.amountPaid;
             staff.settled = true;
@@ -257,7 +274,10 @@ const submitStaff = async (req, res)=> {
             staff.save().then(()=>{
                 res.status(200).send({msg:'successful!'})
             });
-        });
+        }).catch((err)=> {
+            console.log(err);
+            res.status(422).send({msg:'error in submitting document'});
+        })
     }
 
     const notPaid = async (req, res)=> {
@@ -297,10 +317,27 @@ const submitStaff = async (req, res)=> {
         });
     }
 
+    const setPaymentFalse = async (req, res)=>{
+        const id = req.params.id;
+        await  staffModel.findByIdAndUpdate({_id:id},{settled: false});
+        res.status(200).send({msg:'success!'});
+    }
+
+    const setPaymentTrue = async (req, res)=>{
+        const id = req.params.id;
+        await  staffModel.findOne({_id:id}).then((staff)=> {
+                staff.settled = true;
+                staff.not_paid = false;
+                staff.save();
+        })
+        res.status(200).send({msg:'success!'});
+    }
+
 
 
 
 module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, deleteStaff,
                 getAllPenalize, salaryAdvance, getSalaryAdv, FindSalaryAdvByDate,
             editSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
-        searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout}
+        searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
+        setPaymentFalse, setPaymentTrue, payOutByDepartment}
