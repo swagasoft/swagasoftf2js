@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const Cryptr = require('cryptr');
-const lodash = require("lodash");
+const staffModel = mongoose.model('staff');
 const OutletModel = mongoose.model('Outlet');
 
 
@@ -43,9 +42,10 @@ const createOutlet = async(req, res)=> {
 }
 
 const getAll = async (req, res)=> {
-    OutletModel.find({},(err, docs)=> {
-        res.status(200).send(docs);
+    OutletModel.find({}).sort({created_at: -1}).then((docs)=> {
+      res.status(200).send(docs);
     });
+    
 }
 
 const deleteOutlet =  async (req, res)=> {
@@ -66,7 +66,6 @@ const deleteOutlet =  async (req, res)=> {
   }
 
   const searcOutlet = async(req, res)=> {
-    console.log('file',req.body);
     const name = req.body.search;
    await OutletModel.find({"name": {$regex: name, $options:"i"}}, (err, document)=> {
       res.status(200).send({docs: document})
@@ -81,8 +80,15 @@ const deleteOutlet =  async (req, res)=> {
       });
   }
 
+  const getAllMerchant = async (req, res)=> {
+
+    staffModel.find({department:'MERCHANDISER'}).then((merchant)=> {
+      res.status(200).send({merchant: merchant});
+    });
+  }
+
 
 
 
 module.exports = { createOutlet, getAll, deleteOutlet ,editOutlet, searcOutlet,
-            findOutletbyId }
+            findOutletbyId , getAllMerchant}

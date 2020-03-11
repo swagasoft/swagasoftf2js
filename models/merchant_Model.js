@@ -3,48 +3,53 @@ var moment = require('moment');
 
 
 
-var penaltySchema = mongoose.Schema({
-    amount: {
+var merchantSchema = mongoose.Schema({
+    amountSold: {
         type: Number,
         required: true
     },
-    name : {
+    merchantName : {
         type: String,
         required: true
     },
-    user_id : {
+    attendant : {
+        type: Number,
+        required: true
+    },
+    admin : {
         type: String,
         required: true
     },
-       reason: {
+       outletCode: {
         type: String,
         required: true,
     },
     
-    admin: {
-        type: String,
+    bottles: {
+        type: Number,
         required: true,
     },
-    wave: {
+    confirm: {
         type: Boolean, default: false,
     },
-    edit : {
-        type: Number,
-        default: 0
+    verify : {
+        type: Boolean, default: false
     },
 
+     edited: {
+        type: Number, default: 0
+    },
      created_at: {
         type: Date, default: Date.now()
     },
     day : {
         type: String,   default:moment().format('l')
-    }
-    ,
+    },
     qDay :{
         type:Number, default: new Date().getDate(Date.now)
     },
     qMonth :{
-        type:Number, default: new Date().getMonth(Date.now)
+        type:Number, default: new Date().getMonth(Date.now) + 1
     },
     qYear :{
         type:Number, default: new Date().getFullYear(Date.now)
@@ -52,4 +57,4 @@ var penaltySchema = mongoose.Schema({
 
 });
 
-mongoose.model('penalty', penaltySchema);
+mongoose.model('merchant', merchantSchema);

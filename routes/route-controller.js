@@ -6,6 +6,7 @@ const OutletController = require('../controllers/outlet-controller');
 const staffController =  require('../controllers/staff_controller');
 const productController = require('../controllers/distribute-control');
 const fruitController = require('../controllers/fruit_controller');
+const merchantController = require('../controllers/merchant_controller');
 
 const jwt_helper = require('../config/jwt_helper');
 const mongoose  = require('mongoose');
@@ -71,8 +72,21 @@ router.get('/get-fruit-record', jwt_helper.verifyJwtToken,fruitController.getFru
 router.get('/set-payment-false:id', jwt_helper.verifyJwtToken, staffController.setPaymentFalse);
 router.get('/set-payment-true:id', jwt_helper.verifyJwtToken, staffController.setPaymentTrue);
 router.get('/select-payout-depart:cat', jwt_helper.verifyJwtToken, staffController.payOutByDepartment);
-
-
+router.get('/verify-fruit:id', jwt_helper.verifyJwtToken, fruitController.verifyFruit);
+router.get('/ok-fruit-record:id', jwt_helper.verifyJwtToken, fruitController.okFruitRecord);
+router.get('/disprove-fruit-record:id', jwt_helper.verifyJwtToken, fruitController.disproveFruit);
+router.post('/find-fruit-by-date',jwt_helper.verifyJwtToken, fruitController.findFruitbyDate);
+router.post('/edit-fruit-sm', jwt_helper.verifyJwtToken, fruitController.editfruitSubmit);
+router.post('/get-some-data', jwt_helper.verifyJwtToken, merchantController.findSalesByDate);
+router.get('/get-all-merchant', jwt_helper.verifyJwtToken, OutletController.getAllMerchant);
+router.post('/submit-merchant-sales', jwt_helper.verifyJwtToken,merchantController.submitRecord);
+router.get('/get-sales-record', jwt_helper.verifyJwtToken,merchantController.getSalesRecord);
+router.get('/ok-sales-record:id', jwt_helper.verifyJwtToken,merchantController.okSaleRecord);
+router.get('/delete-sales-record:id', jwt_helper.verifyJwtToken,merchantController.deleteSales);
+router.get('/verify-sales-record:id', jwt_helper.verifyJwtToken,merchantController.verifySaleRecord);
+router.post('/get-merchant-record', jwt_helper.verifyJwtToken,merchantController.getMerchantRecord);
+router.post('/merchant-date-bymonth' , jwt_helper.verifyJwtToken, merchantController.getByMonth);
+router.post('/merchant-date-day', jwt_helper.verifyJwtToken, merchantController.getByDay);
 
  function checkValidity(req, res, next){
      const userID = req._id;

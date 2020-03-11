@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 
 var staffSchema = mongoose.Schema({
-    fullname: { type: String, required: true,
+    fullname: { type: String, required: true, unique: true
     },
      phone: { type: String,
     },

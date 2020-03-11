@@ -30,12 +30,13 @@ const submitStaff = async (req, res)=> {
           }).catch((err)=> {
             console.log('ERRORR',err);
             if(err.errors.bankNumber){
-              res.status(422).send({msg :'account number already exist!'});
-            }else{
-              res.status(501).send({msg :'eror in user information'});
-            }
+                res.status(422).send({msg :'account number already exist!'});
+              }else if(err.errors.fullname){
+                res.status(422).send({msg :'fullname already exist!'});
+              }else{
+                res.status(501).send({msg :'eror in user information'});
+              }
           });
-    
 }
 
         const getAllStaff =async (req, res)=> {
@@ -210,8 +211,6 @@ const submitStaff = async (req, res)=> {
         let yearString = req.body.year.toString();
         let monthString = req.body.month.toString();
         queryDate = monthString +'/'+dayString+'/'+yearString;
-        // let queryDate = moment([req.body.day,req.body.month, req.body.year]);
-        console.log('dateee',queryDate);
         await penaltyModel.find({day : queryDate}).then((users)=>{
             console.log(users);
             if(users.length == 0){
