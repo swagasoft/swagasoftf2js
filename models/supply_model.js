@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var moment = require('moment');
 
 var supplyList = mongoose.Schema({
     pineapple: { type: Number, required: true,
@@ -40,7 +41,19 @@ var supplyList = mongoose.Schema({
     },
      axis: { type: String,  required: true,
     },
-
+    
+    qDay :{
+      type:Number, default: new Date().getDate(Date.now)
+  },
+  qMonth :{
+      type:Number, default: new Date().getMonth(Date.now) + 1
+  },
+  qYear :{
+      type:Number, default: new Date().getFullYear(Date.now)
+  },
+  day : {
+   type: String,   default:moment().format('l')
+},
      created_at: {
         type: Date,default:Date.now()
        

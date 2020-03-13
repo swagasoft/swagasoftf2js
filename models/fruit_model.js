@@ -38,6 +38,15 @@ var fruitSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    qDay :{
+        type:Number, default: new Date().getDate(Date.now)
+    },
+    qMonth :{
+        type:Number, default: new Date().getMonth(Date.now) + 1
+    },
+    qYear :{
+        type:Number, default: new Date().getFullYear(Date.now)
+    },
 
      created_at: {
         type: Date, default: Date.now()

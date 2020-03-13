@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var moment = require('moment');
 
 var prodSchema = mongoose.Schema({
     prod_p: {  type: Number, required: true,
@@ -83,7 +84,20 @@ var prodSchema = mongoose.Schema({
      created_at: {
         type: Date,
         default : Date.now()
-    }
+    },
+    
+    qDay :{
+        type:Number, default: new Date().getDate(Date.now)
+    },
+    qMonth :{
+        type:Number, default: new Date().getMonth(Date.now) + 1
+    },
+    qYear :{
+        type:Number, default: new Date().getFullYear(Date.now)
+    },
+    day : {
+     type: String,   default:moment().format('l')
+  },
 
 });
 

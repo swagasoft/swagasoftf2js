@@ -29,7 +29,10 @@ router.post('/search-outlet', jwt_helper.verifyJwtToken,OutletController.searcOu
 router.get('/edit-outlet:id', jwt_helper.verifyJwtToken, OutletController.editOutlet);
 router.post('/update-balance', jwt_helper.verifyJwtToken, userController.updateBalance);
 router.post('/submit-expense', jwt_helper.verifyJwtToken, userController.expenseList);
+router.post('/this-month-expense', jwt_helper.verifyJwtToken, userController.thisMonthExpense);
 router.get('/get-expenses', jwt_helper.verifyJwtToken, userController.getExpense);
+router.get('/confirm-expense:id', jwt_helper.verifyJwtToken, userController.confirmExpense);
+
 router.get('/get-credit', jwt_helper.verifyJwtToken, userController.getCredit);
 router.get('/get-balance', jwt_helper.verifyJwtToken, userController.getBalance);
 router.get('/verify-expense:id', jwt_helper.verifyJwtToken,  userController.verifyExpense);
@@ -54,8 +57,9 @@ router.post('/supply-outlet', jwt_helper.verifyJwtToken,productController.supply
 router.get('/close-record:id', jwt_helper.verifyJwtToken,productController.closeRecord);
 router.get('/get-all-staff', jwt_helper.verifyJwtToken,staffController.getAllStaff);
 router.post('/find-salary-advbydate', jwt_helper.verifyJwtToken, staffController.FindSalaryAdvByDate);
-router.post('/edit-salary-advance', jwt_helper.verifyJwtToken, staffController.editSalaryAdvance);
+router.post('/delete-salary-advance', jwt_helper.verifyJwtToken, staffController.deleteSalaryAdvance);
 router.post('/find-penalty-date', jwt_helper.verifyJwtToken, staffController.findPenaltyDate);
+router.post('/this-month-penalty', jwt_helper.verifyJwtToken, staffController.thisMonthPenalty);
 router.post('/edit-penalty', jwt_helper.verifyJwtToken, staffController.editPenalty);
 router.get('/get-user-details', jwt_helper.verifyJwtToken, userController.getUserDetails);
 router.post('/change-password', jwt_helper.verifyJwtToken, userController.resetPassword);
@@ -87,6 +91,9 @@ router.get('/verify-sales-record:id', jwt_helper.verifyJwtToken,merchantControll
 router.post('/get-merchant-record', jwt_helper.verifyJwtToken,merchantController.getMerchantRecord);
 router.post('/merchant-date-bymonth' , jwt_helper.verifyJwtToken, merchantController.getByMonth);
 router.post('/merchant-date-day', jwt_helper.verifyJwtToken, merchantController.getByDay);
+router.get('/get-limit-staff', jwt_helper.verifyJwtToken, staffController.getLimitStaff);
+router.post('/this-month-advs', jwt_helper.verifyJwtToken, staffController.thisMonthAdvs);
+router.put('/update-expense', jwt_helper.verifyJwtToken,userController.updateExpense);
 
  function checkValidity(req, res, next){
      const userID = req._id;

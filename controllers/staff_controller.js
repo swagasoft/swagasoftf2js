@@ -45,7 +45,11 @@ const submitStaff = async (req, res)=> {
              });  
         }
 
-        // allSettledStaff({})
+        const getLimitStaff = async (req, res)=> {
+            staffModel.find({}).sort({created_at: -1}).limit(40).then((staff)=> {
+                res.status(200).send({staff: staff});
+            })
+        }
 
         const getStaffByCategory = async (req, res)=> {
             let cat = req.params.cat;
@@ -123,7 +127,7 @@ const submitStaff = async (req, res)=> {
         }
 
         const getAllPenalize = async (req, res)=> {
-            await penaltyModel.find({}).sort({created_at: -1}).limit(15).then((users)=>{
+            await penaltyModel.find({}).sort({created_at: -1}).limit(30).then((users)=>{
                 if(users.length == 0){
                     res.status(404).send({msg:"No penalty found"});
                 }else{ 
@@ -134,7 +138,7 @@ const submitStaff = async (req, res)=> {
         }
 
         const getSalaryAdv = async (req, res) => {
-            await salaryAdvModel.find({}).sort({created_at: -1}).limit(15).then((users)=> {
+            await salaryAdvModel.find({}).sort({created_at: -1}).limit(40).then((users)=> {
                 if(users.length == 0){
                     res.status(404).send({msg:'no advance salary found!'});
                 }else{
@@ -163,27 +167,24 @@ const submitStaff = async (req, res)=> {
         })
     }
 
-    const editSalaryAdvance = async (req, res)=>{
-        const amount = req.body.values.amount;
-        const reason = req.body.values.reason;
-        const admin = req.body.admin;
-        const fileId = req.body.id;
+    const deleteSalaryAdvance = async (req, res)=>{
 
-        salaryAdvModel.findById({_id:req.body.id}).then((document)=> {
-            if(document.admin == admin){
-                document.amount = amount;
-                document.edit += 1;
-                document.reason = reason;
-                document.save().then(()=>{
-                    res.status(200).send({msg:'edit sucess!'})
-                });
-            }else{
-                res.status(422).send({msg:'no permission to edit!'});
-            }
+        salaryAdvModel.findById({_id:req.body.id}).then((record)=> {
+            staffModel.findById({_id:record.user_id}).then((user)=> {
+                user.advance_salary = user.advance_salary - record.amount;
+                user.save().then(()=> {
+                    salaryAdvModel.findByIdAndDelete({_id:req.body.id}).then(()=> {
+                        res.status(200).send({msg:'delete sucess!'})
+                    })
+                }).catch((err)=> {
+                    res.status(422).send({msg:'error while deleting record!'})
+                })
+            })
         })
-        // staffModel.findById({_id: staff_id}).then((staff)=> {
-            
-        // })
+       
+        await salaryAdvModel.findByIdAndUpdate({_id:req.body.id});
+        res.status(200).send({msg:'delete sucess!'})
+
     }
 
 
@@ -242,8 +243,13 @@ const submitStaff = async (req, res)=> {
     const searchPenalty = async (req, res)=> {
         console.log('file',req.body);
         const search = req.body.search;
-       await penaltyModel.find({"name": {$regex: search, $options:"i"}}, (err, users)=> {
-          res.status(200).send({users});
+       await penaltyModel.find({$and:[{"name": {$regex: search, $options:"i"}}
+       ,{qMonth:req.body.month},{qYear:req.body.year}]} ,(err, users)=> {
+          if(users.length == 0) {
+              res.status(404).send({msg:'no record!'})
+          }else{
+            res.status(200).send({users});
+          }
         });
 
       }
@@ -332,11 +338,51 @@ const submitStaff = async (req, res)=> {
         res.status(200).send({msg:'success!'});
     }
 
+    // const advsStaffMonthAndName = async (req, res)=> {
+    //     console.log(req.body);
+    //     merchantModel.find({$and:[{qMonth : req.body.month}
+    //         ,{qYear: req.body.year},{merchantName:req.body.fullname}]}).then((record)=> {
+    //         if(record.length == 0){
+    //             console.log('record in loop',record)
+    //             res.status(404).send({msg:'no record!'});
+    //         }else{
+    //             console.log(record);
+    //             res.status(200).send({record:record});
+    //         }
+    //     });
+    // }
+
+    const thisMonthAdvs = async ( req, res)=> {
+        console.log('my month avs',req.body);
+    salaryAdvModel.find({$and:[{qMonth : req.body.month}
+        ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
+        if(record.length == 0){
+            res.status(404).send({msg:'no record!'});
+        }else{
+            console.log(record);
+            res.status(200).send({record:record});
+        }
+    });
+    }
+
+    const thisMonthPenalty = async (req, res)=> {
+        console.log(req.body);
+        penaltyModel.find({$and:[{qMonth : req.body.month} 
+            ,{qYear: req.body.year}]}).sort({created_at:-1}).then((record)=>{
+            if(record.length == 0){
+                res.status(404).send({msg:'no record!'});
+            }else{
+                res.status(200).send({record: record})
+            }
+        });
+    }
+
 
 
 
 module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, deleteStaff,
                 getAllPenalize, salaryAdvance, getSalaryAdv, FindSalaryAdvByDate,
-            editSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
+            deleteSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
-        setPaymentFalse, setPaymentTrue, payOutByDepartment}
+        setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
+        thisMonthPenalty}

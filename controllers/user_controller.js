@@ -152,9 +152,25 @@ const login = (req, res, done)=> {
           }
         })
       })
+    }
 
-    
-      
+    const updateExpense = async(req, res)=> {
+      expenseListModel.findById({_id:req.body.id}).then((record)=> {
+      if(record.admin == req.body.admin){
+        record.edit += 1;
+        record.description = req.body.description;
+        record.product = req.body.product;
+        record.product = req.body.product;
+        record.amountPaid = req.body.amountPaid;
+        record.receiver = req.body.receiver;
+        record.information = req.body.information;
+        record.save(()=> {
+          res.status(200).send({msg:'update success!'});
+        })
+      }else{
+        res.status(412).send({msg:'you are not the author!'});
+      }
+      });
     }
 
     const getCredit = async (req, res)=> {
@@ -174,6 +190,25 @@ const login = (req, res, done)=> {
       expenseListModel.find({}).sort({created_at : -1}).limit(30).then((expenses)=> {
         res.status(200).send({expenses});
       });
+    }
+
+    const thisMonthExpense = async (req, res)=> {
+      console.log('my month avs',req.body);
+      expenseListModel.find({$and:[{qMonth : req.body.month}
+          ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
+          if(record.length == 0){
+              res.status(404).send({msg:'no record!'});
+          }else{
+              console.log(record);
+              res.status(200).send({record:record});
+          }
+      });
+    }
+
+    const confirmExpense = async (req, res)=> {
+      console.log(req.params.id);
+    await  expenseListModel.findByIdAndUpdate({_id:req.params.id},{confirm:true});
+      res.status(200).send({msg:'success'});
     }
 
     const verifyExpense = async (req, res)=> {
@@ -217,9 +252,14 @@ const login = (req, res, done)=> {
     const searcExpense = async(req, res)=> {
       console.log('file',req.body);
       const search = req.body.search;
-     await expenseListModel.find({"information": {$regex: search, $options:"i"}}, (err, expenses)=> {
-        res.status(200).send({expenses});
-      });
+      await expenseListModel.find({$and:[{"information": {$regex: search, $options:"i"}}
+      ,{qMonth:req.body.month},{qYear:req.body.year}]} ,(err, expenses)=> {
+         if(expenses.length == 0) {
+             res.status(404).send({msg:'no record!'})
+         }else{
+           res.status(200).send({expenses:expenses});
+         }
+       });
   
     }
 
@@ -272,4 +312,5 @@ const login = (req, res, done)=> {
 module.exports = {activateUser, login, createUser, getAllUsers, getCredit,
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
   getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,
-  searcExpense, getUserDetails, resetPassword,findExpensebyDate }
+  searcExpense, getUserDetails, resetPassword,findExpensebyDate, thisMonthExpense ,
+  confirmExpense, updateExpense}

@@ -41,7 +41,7 @@ var salary_Adv = mongoose.Schema({
         type:Number, default: new Date().getDate(Date.now)
     },
     qMonth :{
-        type:Number, default: new Date().getMonth(Date.now)
+        type:Number, default: new Date().getMonth(Date.now) + 1
     },
     qYear :{
         type:Number, default: new Date().getFullYear(Date.now)
