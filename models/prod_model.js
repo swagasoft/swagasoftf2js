@@ -82,21 +82,20 @@ var prodSchema = mongoose.Schema({
         type: Array, default:['pineapple', 'orange', 'watermelon','tigernut','carrot','sugarcane','slg']
     },
      created_at: {
-        type: Date,
-        default : Date.now()
+        type: Date, required: true
     },
     
     qDay :{
-        type:Number, default: new Date().getDate(Date.now)
+        type:Number, required: true
     },
     qMonth :{
-        type:Number, default: new Date().getMonth(Date.now) + 1
+        type:Number, required: true
     },
     qYear :{
-        type:Number, default: new Date().getFullYear(Date.now)
+        type:Number,required: true
     },
     day : {
-     type: String,   default:moment().format('l')
+     type: String, required: true
   },
 
 });

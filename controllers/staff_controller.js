@@ -4,6 +4,7 @@ const lodash = require("lodash");
 const staffModel = mongoose.model('staff');
 const salaryAdvModel = mongoose.model('salary_adv');
 const penaltyModel = mongoose.model('penalty');
+const payRecordModel = mongoose.model('pay_record');
 var moment = require('moment');
 
 
@@ -88,6 +89,11 @@ const submitStaff = async (req, res)=> {
                     newPenalty.user_id = user._id;
                     newPenalty.admin = admin;
                     newPenalty.reason = reason;
+                    newPenalty.created_at = req.body.date;
+                    newPenalty.qDay = new Date().getDate(req.body.date);
+                    newPenalty.qMonth = new Date().getMonth(req.body.date) + 1;
+                    newPenalty.qYear = new Date().getFullYear(req.body.date) ;
+                    newPenalty.day = moment(req.body.date).format('l') ;
                     newPenalty.save().then(()=> {
                         res.status(200).send({msg: 'success'});
                     });
@@ -110,6 +116,11 @@ const submitStaff = async (req, res)=> {
                 newSalaryAdv.user_id = user._id;
                 newSalaryAdv.admin = admin;
                 newSalaryAdv.reason = reason;
+                newSalaryAdv.created_at = req.body.date;
+                newSalaryAdv.qDay = new Date().getDate(req.body.date);
+                newSalaryAdv.qMonth = new Date().getMonth(req.body.date) + 1;
+                newSalaryAdv.qYear = new Date().getFullYear(req.body.date) ;
+                newSalaryAdv.day = moment(req.body.date).format('l') ;
                 newSalaryAdv.save().then(()=> {
                     staffModel.findById({_id:userId}).then((staff)=> {
                         staff.advance_salary += parseInt(amount);
@@ -377,6 +388,72 @@ const submitStaff = async (req, res)=> {
         });
     }
 
+    // reset all staff acoun to zero and save to payRecord.
+    const resetPayRoll = async (req, res)=> {
+         await  staffModel.find({}).then((allStaff)=> {
+            allStaff.forEach((staff)=> {
+                var newPayRecord  = new payRecordModel();
+                newPayRecord.penalty = staff.penalty;
+                newPayRecord.savings = staff.savings;
+                newPayRecord.give = staff.give;
+                newPayRecord.advance_salary = staff.advance_salary;
+                newPayRecord.not_paid = staff.not_paid;
+                newPayRecord.bonus = staff.bonus;
+                newPayRecord.bonus = staff.bonus;
+                newPayRecord.AmountPaid = staff.AmountPaid;
+                newPayRecord.AmountPaid = staff.AmountPaid;
+                newPayRecord.fullname = staff.fullname;
+                newPayRecord.bankNumber = staff.bankNumber;
+                newPayRecord.bankAccountName = staff.bankAccountName;
+                newPayRecord.bankAccountType = staff.bankAccountType;
+                newPayRecord.department = staff.department;
+                newPayRecord.salary = staff.salary;
+                newPayRecord.not_paid = staff.not_paid;
+                newPayRecord.settled = staff.settled;
+                newPayRecord.save().then(()=> {
+                    staff.penalty = 0;
+                    staff.savings = 0;
+                    staff.give = 0;
+                    staff.advance_salary = 0;
+                    staff.not_paid = false;
+                    staff.penalize = false;
+                    staff.bonus = 0;
+                    staff.AmountPaid = 0;
+                    staff.salary = 0;
+                    staff.settled = false;
+                    staff.save();
+                })
+
+            })
+         })
+         res.status(200).send({msg:'RESET SUCCESSFUL!'})
+        
+    }
+
+    const getPayRecord = (req, res)=> {
+        console.log(req.body);
+       payRecordModel.find({$and:[{qMonth : req.body.month} 
+            ,{qYear: req.body.year}]}).then((record)=> {
+                if(record.length == 0){
+                    res.status(444).send({msg: ' NO RECORD!'});
+                }else{
+                    res.status(200).send({record: record});
+                }
+            })
+        
+    }
+
+    const recordDepartment = (req, res)=> {
+        payRecordModel.find({$and:[{qMonth : req.body.month}
+                    ,{qYear: req.body.year},{department:req.body.department}]}).then((record)=> {
+                        if(record.length == 0){
+                            res.status(444).send({msg: ' no record!'});
+                        }else{
+                            res.status(200).send({record: record});
+                        }
+                    }); 
+    }
+
 
 
 
@@ -385,4 +462,4 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
             deleteSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
-        thisMonthPenalty}
+        thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment}

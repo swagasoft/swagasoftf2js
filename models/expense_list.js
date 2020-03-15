@@ -47,20 +47,20 @@ var expenseList = mongoose.Schema({
     },
 
      created_at: {
-        type: Date, default:Date.now()
+        type: Date, default:moment().format('lll')
     },
     
     qDay :{
-        type:Number, default: new Date().getDate(Date.now)
+        type:Number, 
     },
     qMonth :{
-        type:Number, default: new Date().getMonth(Date.now) + 1
+        type:Number,
     },
     qYear :{
-        type:Number, default: new Date().getFullYear(Date.now)
+        type:Number
     },
     day : {
-     type: String,   default:moment().format('l')
+     type: String,  required:true
   },
 
 });

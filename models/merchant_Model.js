@@ -40,19 +40,19 @@ var merchantSchema = mongoose.Schema({
         type: Number, default: 0
     },
      created_at: {
-        type: Date, default: Date.now()
+        type: Date, 
     },
     day : {
-        type: String,   default:moment().format('l')
+        type: String,  
     },
     qDay :{
-        type:Number, default: new Date().getDate(Date.now)
+        type:Number, 
     },
     qMonth :{
-        type:Number, default: new Date().getMonth(Date.now) + 1
+        type:Number, 
     },
     qYear :{
-        type:Number, default: new Date().getFullYear(Date.now)
+        type:Number, 
     }
 
 });

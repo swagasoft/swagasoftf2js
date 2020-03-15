@@ -2,17 +2,20 @@
 
 const mongoose = require('mongoose');
 const lodash = require("lodash");
+const moment = require('moment');
 const prodModel = mongoose.model('production');
 const SupplyModel = mongoose.model('supply_list');
 
 
 const submitProd = async (req, res)=> {
-    await prodModel.findOne({close : false}).sort({created_at:1}).then((record)=> {
+    await prodModel.findOne({close : false}).sort({created_at:-1}).then((record)=> {
         if(record){
             res.status(422).send({msg:'open record already exit'});
         }else{
-     prodModel.findOne({close:true}).sort({created_at:1}).then((record)=> {
+     prodModel.findOne({close:true}).sort({created_at:-1}).then((record)=> {
+         console.log('record',record);
         if(record){
+            console.log('new prod one', record);
             var newProd = new prodModel();
             newProd.open_p = record.bal_p;
             newProd.open_o = record.bal_o;
@@ -28,14 +31,20 @@ const submitProd = async (req, res)=> {
             newProd.prod_t = req.body.tigernut;
             newProd.prod_c = req.body.carrot;
             newProd.prod_s = req.body.sugarcane;
-            newProd.prod_slg = req.body.slg;
+            newProd.prod_slg = req.body.slg; 
+            newProd.created_at = req.body.date;
+            newProd.qDay = new Date().getDate(req.body.date);
+            newProd.qMonth = new Date().getMonth(req.body.date) + 1;
+            newProd.qYear = new Date().getFullYear(req.body.date) ;
+            newProd.day = moment(req.body.date).format('l') ;
             newProd.save().then(()=> {
                 res.status(200).send({msg : 'submitted successful!'});
             }).catch((err)=> {
-                console.log(err);
+                console.log('ERROR SAVING..',err);
                 res.status(422).send({msg : ' error creating production!'});
             });
         }else{
+            console.log('new prod 2');
             var newProd = new prodModel();
             newProd.prod_p = req.body.pineapple;
             newProd.prod_o = req.body.orange;
@@ -44,10 +53,15 @@ const submitProd = async (req, res)=> {
             newProd.prod_c = req.body.carrot;
             newProd.prod_s = req.body.sugarcane;
             newProd.prod_slg = req.body.slg;
+            newProd.created_at = req.body.date;
+            newProd.qDay = new Date().getDate(req.body.date);
+            newProd.qMonth = new Date().getMonth(req.body.date) + 1;
+            newProd.qYear = new Date().getFullYear(req.body.date) ;
+            newProd.day = moment(req.body.date).format('l') ;
             newProd.save().then(()=> {
                 res.status(200).send({msg : 'submitted successful!'});
             }).catch((err)=> {
-                console.log(err);
+                console.log('ERROR SAVING',err);
                 res.status(422).send({msg : ' error creating production!'});
             });
         }
@@ -98,7 +112,7 @@ const sumbitBadStock = async (req, res)=> {
 
 
 const supplyOutlet = async (req, res)=> {
-    console.log('submitting to outlet..');
+    console.log('submitting to outlet..', req.body);
     var newSupply = new SupplyModel();
     newSupply.orange = req.body.orange;
     newSupply.watermelon = req.body.watermelon;
@@ -119,23 +133,28 @@ const supplyOutlet = async (req, res)=> {
     newSupply.outlet = req.body.outlet;
     newSupply.axis = req.body.axis;
     newSupply.prod_id = req.body.fileId;
+    newSupply.created_at = req.body.date;
+    newSupply.qDay = new Date().getDate(req.body.date);
+    newSupply.qMonth = new Date().getMonth(req.body.date) + 1;
+    newSupply.qYear = new Date().getFullYear(req.body.date) ;
+    newSupply.day = moment(req.body.date).format('l') ;
     newSupply.save().then(()=> {
         prodModel.findById({_id:req.body.fileId}).then((doc)=> {
-            doc.prod_p = doc.prod_p - req.body.pineapple;
-            doc.prod_o = doc.prod_o - req.body.orange;
-            doc.prod_w = doc.prod_w - req.body.watermelon;
-            doc.prod_t = doc.prod_t - req.body.tigernut;
-            doc.prod_c = doc.prod_c - req.body.carrot;
-            doc.prod_s = doc.prod_s - req.body.sugarcane;
-            doc.prod_slg = doc.prod_slg - req.body.slg;
+            // doc.prod_p = doc.prod_p - req.body.pineapple;
+            // doc.prod_o = doc.prod_o - req.body.orange;
+            // doc.prod_w = doc.prod_w - req.body.watermelon;
+            // doc.prod_t = doc.prod_t - req.body.tigernut;
+            // doc.prod_c = doc.prod_c - req.body.carrot;
+            // doc.prod_s = doc.prod_s - req.body.sugarcane;
+            // doc.prod_slg = doc.prod_slg - req.body.slg;
 
-            doc.prod_p = doc.prod_p - req.body.p_samp;
-            doc.prod_o = doc.prod_o - req.body.o_samp;
-            doc.prod_w = doc.prod_w - req.body.w_samp;
-            doc.prod_t = doc.prod_t - req.body.t_samp;
-            doc.prod_c = doc.prod_c - req.body.c_samp;
-            doc.prod_s = doc.prod_s - req.body.s_samp;
-            doc.prod_slg = doc.prod_slg - req.body.slg_samp;
+            // doc.prod_p = doc.prod_p - req.body.p_samp;
+            // doc.prod_o = doc.prod_o - req.body.o_samp;
+            // doc.prod_w = doc.prod_w - req.body.w_samp;
+            // doc.prod_t = doc.prod_t - req.body.t_samp;
+            // doc.prod_c = doc.prod_c - req.body.c_samp;
+            // doc.prod_s = doc.prod_s - req.body.s_samp;
+            // doc.prod_slg = doc.prod_slg - req.body.slg_samp;
             
             doc.sup_p += req.body.pineapple + req.body.p_samp;
             doc.sup_o += req.body.orange + req.body.o_samp;
@@ -159,20 +178,23 @@ const supplyOutlet = async (req, res)=> {
   }
 
      const  closeRecord = async (req, res)=> {
-            console.log(req.params.id);
           await prodModel.findById({_id:req.params.id}).then((doc)=> {
-              console.log(doc);
+             
+               if(doc){
                 doc.close = true;
-                doc.bal_p = doc.prod_p - doc.bad_p - doc.sup_p;
-                doc.bal_o = doc.prod_o - doc.bad_o - doc.sup_o;
-                doc.bal_w = doc.prod_w - doc.bad_w - doc.sup_w;
-                doc.bal_t = doc.prod_t - doc.bad_t - doc.sup_t;
-                doc.bal_c = doc.prod_c - doc.bad_c - doc.sup_c;
-                doc.bal_s = doc.prod_s - doc.bad_s - doc.sup_s;
-                doc.bal_slg = doc.prod_slg - doc.bad_slg - doc.sup_slg;
-                doc.save().then(()=> {
+                doc.bal_p = doc.open_p + doc.prod_p - doc.bad_p - doc.sup_p ;
+                doc.bal_o = doc.open_o + doc.prod_o - doc.bad_o - doc.sup_o;
+                doc.bal_w =doc.open_w + doc.prod_w - doc.bad_w - doc.sup_w;
+                doc.bal_t = doc.open_t + doc.prod_t - doc.bad_t - doc.sup_t;
+                doc.bal_c = doc.open_c + doc.prod_c - doc.bad_c - doc.sup_c;
+                doc.bal_s =doc.open_s + doc.prod_s - doc.bad_s - doc.sup_s;
+                doc.bal_slg =doc.open_slg + doc.prod_slg - doc.bad_slg - doc.sup_slg;
+                doc.save().then((finish)=> {
                     res.status(200).send({msg:'submitted'})
                 })
+               }else{
+                   res.status(422).send({msg:'cannot close record at the moment'});
+               }
             });
 
            

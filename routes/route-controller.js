@@ -29,6 +29,7 @@ router.post('/search-outlet', jwt_helper.verifyJwtToken,OutletController.searcOu
 router.get('/edit-outlet:id', jwt_helper.verifyJwtToken, OutletController.editOutlet);
 router.post('/update-balance', jwt_helper.verifyJwtToken, userController.updateBalance);
 router.post('/submit-expense', jwt_helper.verifyJwtToken, userController.expenseList);
+router.post('/return-expense', jwt_helper.verifyJwtToken, userController.returnExpense);
 router.post('/this-month-expense', jwt_helper.verifyJwtToken, userController.thisMonthExpense);
 router.get('/get-expenses', jwt_helper.verifyJwtToken, userController.getExpense);
 router.get('/confirm-expense:id', jwt_helper.verifyJwtToken, userController.confirmExpense);
@@ -72,6 +73,7 @@ router.get('/not-paid:id', jwt_helper.verifyJwtToken, staffController.notPaid);
 router.get('/get-all-payout', jwt_helper.verifyJwtToken, staffController.getAllPayout);
 router.post('/search-staff-name', jwt_helper.verifyJwtToken, staffController.searchStaff);
 router.post('/submit-fruit', jwt_helper.verifyJwtToken,fruitController.registerFruit );
+router.post('/this-month-fruit', jwt_helper.verifyJwtToken,fruitController.thisMonthFruit );
 router.get('/get-fruit-record', jwt_helper.verifyJwtToken,fruitController.getFruitRecord );
 router.get('/set-payment-false:id', jwt_helper.verifyJwtToken, staffController.setPaymentFalse);
 router.get('/set-payment-true:id', jwt_helper.verifyJwtToken, staffController.setPaymentTrue);
@@ -94,6 +96,9 @@ router.post('/merchant-date-day', jwt_helper.verifyJwtToken, merchantController.
 router.get('/get-limit-staff', jwt_helper.verifyJwtToken, staffController.getLimitStaff);
 router.post('/this-month-advs', jwt_helper.verifyJwtToken, staffController.thisMonthAdvs);
 router.put('/update-expense', jwt_helper.verifyJwtToken,userController.updateExpense);
+router.get('/reset-payroll', jwt_helper.verifyJwtToken, staffController.resetPayRoll);
+router.post('/get-pay-record', jwt_helper.verifyJwtToken, staffController.getPayRecord);
+router.post('/record-department', jwt_helper.verifyJwtToken, staffController.recordDepartment);
 
  function checkValidity(req, res, next){
      const userID = req._id;

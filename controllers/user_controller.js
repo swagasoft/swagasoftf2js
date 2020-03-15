@@ -122,7 +122,12 @@ const login = (req, res, done)=> {
       }else{
         var newAccount = new expenseAccountModel();
         newAccount.name = req.body.name;
-        newAccount.balance = req.body.amount;
+        newAccount.balance = req.body.amount; 
+        newAccount.created_at = req.body.date;
+        newAccount.qDay = new Date().getDate(req.body.date);
+        newAccount.qMonth = new Date().getMonth(req.body.date) + 1;
+        newAccount.qYear = new Date().getFullYear(req.body.date) ;
+        newAccount.day = moment(req.body.date).format('l') ;
         newAccount.save((result)=> {
           res.status(200).send({msg: 'success', result: result});
         });
@@ -142,6 +147,10 @@ const login = (req, res, done)=> {
       newExpense.admin = req.body.admin;
       newExpense.created_at = req.body.date;
       newExpense.information = req.body.information;
+      newExpense.qDay = new Date().getDate(req.body.date);
+      newExpense.qMonth = new Date().getMonth(req.body.date) + 1;
+      newExpense.qYear = new Date().getFullYear(req.body.date) ;
+      newExpense.day = moment(req.body.date).format('l') ;
       await newExpense.save().then(()=> {
         expenseAccountModel.findOne({name : 'BALANCE'},(err, doc)=> {
           if(doc){
@@ -151,10 +160,13 @@ const login = (req, res, done)=> {
             res.status(200).send({msg: 'expense not recorded..'});
           }
         })
+      }).catch((err)=> {
+        res.status(422).send({msg:'error saving record'});
       })
     }
 
     const updateExpense = async(req, res)=> {
+      let oldExpense = await expenseListModel.findById({_id:req.body.id});
       expenseListModel.findById({_id:req.body.id}).then((record)=> {
       if(record.admin == req.body.admin){
         record.edit += 1;
@@ -164,11 +176,20 @@ const login = (req, res, done)=> {
         record.amountPaid = req.body.amountPaid;
         record.receiver = req.body.receiver;
         record.information = req.body.information;
-        record.save(()=> {
-          res.status(200).send({msg:'update success!'});
+        record.save().then((editedexpense)=> {
+          console.log('old',oldExpense)
+          console.log('new',editedexpense)
+          expenseAccountModel.findOne({}).then((account)=> {
+            account.balance += oldExpense.amountPaid;
+            account.balance -= editedexpense.amountPaid;
+            account.save(()=> {
+              res.status(200).send({msg:'edited successful!y'})
+            })
+          });
+
         })
       }else{
-        res.status(412).send({msg:'you are not the author!'});
+        res.status(412).send({msg:'unauthorize!'});
       }
       });
     }
@@ -306,6 +327,28 @@ const login = (req, res, done)=> {
       })
     }
 
+    const returnExpense = async (req, res)=> {
+      console.log(req.body);
+      fileID = req.body.id;
+      admin = req.body.admin;
+      await expenseListModel.updateOne({_id:fileID},{return: true});
+      expenseListModel.findById({_id:fileID}, (err, record)=> {
+        console.log(record);
+        if(record.admin == admin){
+          expenseAccountModel.findOne({}).then((account)=> {
+            account.balance += record.amountPaid;
+            account.save().then(()=> {
+              res.status(200).send({msg:'return successful!'});
+            });
+          });
+
+        }else{
+          res.status(403).send({msg:'unauthorize!'});
+        }
+      })
+       
+    }
+
 
 
 
@@ -313,4 +356,4 @@ module.exports = {activateUser, login, createUser, getAllUsers, getCredit,
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
   getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,
   searcExpense, getUserDetails, resetPassword,findExpensebyDate, thisMonthExpense ,
-  confirmExpense, updateExpense}
+  confirmExpense, updateExpense, returnExpense}

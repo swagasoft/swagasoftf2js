@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const FruitModel = mongoose.model('fruit');
+const moment = require('moment');
 
 const registerFruit = async (req, res)=> {
-    console.log(req.body);
     var newFruit = new FruitModel();
     newFruit.product = req.body.product;
     newFruit.very_big = req.body.very_big;
@@ -16,6 +16,11 @@ const registerFruit = async (req, res)=> {
     newFruit.kilo = req.body.kg;
     newFruit.driver = req.body.driver;
     newFruit.admin = req.body.admin;
+    newFruit.created_at = req.body.date;
+    newFruit.qDay = new Date().getDate(req.body.date);
+    newFruit.qMonth = new Date().getMonth(req.body.date) + 1;
+    newFruit.qYear = new Date().getFullYear(req.body.date) ;
+    newFruit.day = moment(req.body.date).format('l') ;
     newFruit.save().then(()=> {
         res.status(200).send({msg:'i see you'})
     }).catch((err)=> {
@@ -25,7 +30,6 @@ const registerFruit = async (req, res)=> {
 }
 
 const editfruitSubmit = async (req, res)=> {
-    console.log(req.body);
     const fileId = req.body.id;
     FruitModel.findById({_id:fileId}).then((record)=> {
         if (record.admin == req.body.admin){
@@ -94,9 +98,21 @@ const findFruitbyDate = async (req, res)=> {
     });
 }
 
+const thisMonthFruit = (req, res)=> {
+    console.log(req.body);
+    FruitModel.find({$and:[{qMonth:req.body.month},{qYear:req.body.year}]}).then((record)=> {
+        if(record.length == 0){
+            res.status(404).send({msg:'no record!'});
+        }else{
+            res.status(200).send({record:record});
+        }
+      
+    })
+   
+}
 
 
 
 
 module.exports = { registerFruit, getFruitRecord, verifyFruit,okFruitRecord, findFruitbyDate,
-                disproveFruit,editfruitSubmit}
+                disproveFruit,editfruitSubmit, thisMonthFruit}

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const merchantModel = mongoose.model('merchant');
+var moment = require('moment');
 
 const submitRecord = async (req, res)=> {
     console.log(req.body);
@@ -10,9 +11,15 @@ const submitRecord = async (req, res)=> {
     merchantSale.attendant = req.body.attendant;
     merchantSale.bottles = req.body.bottles;
     merchantSale.amountSold = req.body.amountSold;
-    merchantSale.save().then(()=> {
+    merchantSale.created_at = req.body.date;
+    merchantSale.qDay = new Date().getDate(req.body.date);
+    merchantSale.qMonth = new Date().getMonth(req.body.date) + 1;
+    merchantSale.qYear = new Date().getFullYear(req.body.date) ;
+    merchantSale.day = moment(req.body.date).format('l') ;
+    merchantSale.save().then(()=> { 
         res.status(200).send({msg:'submitted successful!!'});
     }).catch((err)=>{
+        console.log(err);
         res.status(422).send({msg:'error submitting record!'});
     })
 }
