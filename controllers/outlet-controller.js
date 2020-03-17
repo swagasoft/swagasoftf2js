@@ -87,8 +87,18 @@ const deleteOutlet =  async (req, res)=> {
     });
   }
 
+  const updateMerchantRate = async (req, res)=> {
+    console.log(req.body);
+    const fileId = req.body.id;
+    const amount = req.body.values.amount;
+    console.log(fileId)
+    console.log(amount)
+    await OutletModel.findByIdAndUpdate({_id:fileId},{merchant_rate: amount});
+    res.status(200).send({msg:' update successful!'})
+  }
+
 
 
 
 module.exports = { createOutlet, getAll, deleteOutlet ,editOutlet, searcOutlet,
-            findOutletbyId , getAllMerchant}
+            findOutletbyId , getAllMerchant, updateMerchantRate}

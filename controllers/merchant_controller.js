@@ -44,6 +44,11 @@ const verifySaleRecord = async (req, res)=> {
     await merchantModel.findByIdAndUpdate({_id:fileId},{verify: true});
     res.status(200).send({msg:'success!'});
 }
+const disproveSale = async (req, res)=> {
+    const fileId = req.params.id;
+    await merchantModel.findByIdAndUpdate({_id:fileId},{verify: false});
+    res.status(200).send({msg:'success!'});
+}
 
 const findSalesByDate = async (req, res)=> {
     merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).then((record)=> {
@@ -97,4 +102,4 @@ const getByDay = async (req, res)=> {
 }
 
 module.exports = {findSalesByDate, submitRecord, getSalesRecord, okSaleRecord, verifySaleRecord,
-                deleteSales, getMerchantRecord, getByMonth, getByDay}
+                deleteSales, getMerchantRecord, getByMonth, getByDay, disproveSale}

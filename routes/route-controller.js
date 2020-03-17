@@ -22,6 +22,7 @@ router.post('/create-user', userController.createUser);
 router.post('/search-username', jwt_helper.verifyJwtToken, userController.searchUser);
 router.get('/delete-user:id', jwt_helper.verifyJwtToken, userController.deleteUser);
 router.get('/delete-outlet:id', jwt_helper.verifyJwtToken,OutletController.deleteOutlet);
+router.post('/update-merchant-rate', jwt_helper.verifyJwtToken,OutletController.updateMerchantRate);
 router.get('/get-all-users', jwt_helper.verifyJwtToken, userController.getAllUsers);
 router.post('/create-outlet', jwt_helper.verifyJwtToken,OutletController.createOutlet);
 router.get('/get-all-oulets', jwt_helper.verifyJwtToken,OutletController.getAll);
@@ -90,6 +91,7 @@ router.get('/get-sales-record', jwt_helper.verifyJwtToken,merchantController.get
 router.get('/ok-sales-record:id', jwt_helper.verifyJwtToken,merchantController.okSaleRecord);
 router.get('/delete-sales-record:id', jwt_helper.verifyJwtToken,merchantController.deleteSales);
 router.get('/verify-sales-record:id', jwt_helper.verifyJwtToken,merchantController.verifySaleRecord);
+router.get('/disprove-sales-record:id', jwt_helper.verifyJwtToken,merchantController.disproveSale);
 router.post('/get-merchant-record', jwt_helper.verifyJwtToken,merchantController.getMerchantRecord);
 router.post('/merchant-date-bymonth' , jwt_helper.verifyJwtToken, merchantController.getByMonth);
 router.post('/merchant-date-day', jwt_helper.verifyJwtToken, merchantController.getByDay);

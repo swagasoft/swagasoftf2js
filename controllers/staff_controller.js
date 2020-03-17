@@ -173,7 +173,7 @@ const submitStaff = async (req, res)=> {
                     res.status(200).send({msg:'edit sucess!'})
                 })
             }else{
-                res.status(422).send({msg:'no permission to edit!'});
+                res.status(422).send({msg:'AUTHORIZATION ERROR!'});
             }
         })
     }
