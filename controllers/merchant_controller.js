@@ -3,7 +3,6 @@ const merchantModel = mongoose.model('merchant');
 var moment = require('moment');
 
 const submitRecord = async (req, res)=> {
-    console.log(req.body);
     var merchantSale = new merchantModel ();
     merchantSale.admin = req.body.admin;
     merchantSale.merchantName = req.body.merchantName;
@@ -53,10 +52,8 @@ const disproveSale = async (req, res)=> {
 const findSalesByDate = async (req, res)=> {
     merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).then((record)=> {
         if(record.length == 0){
-            console.log('record in loop',record)
             res.status(404).send({msg:'no record!'});
         }else{
-            console.log(record);
             res.status(200).send({record:record});
         }
     });
@@ -76,30 +73,37 @@ const getMerchantRecord = async (req, res)=> {
 }
 
 const getByMonth = async (req, res)=> {
-    console.log(req.body);
     merchantModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{merchantName:req.body.fullname}]}).then((record)=> {
         if(record.length == 0){
-            console.log('record in loop',record)
             res.status(404).send({msg:'no record!'});
         }else{
-            console.log(record);
             res.status(200).send({record:record});
         }
     });
 }
 const getByDay = async (req, res)=> {
-    console.log(req.body);
     merchantModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{qDay:req.body.day}]}).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
-            console.log(record);
+            res.status(200).send({record:record});
+        }
+    });
+}
+
+const outletSales = async (req, res)=> {
+    console.log(req.body);
+    merchantModel.find({$and:[{qMonth : req.body.month}
+        ,{qYear: req.body.year},{outletCode:req.body.MerchantCode}]}).then((record)=> {
+        if(record.length == 0){
+            res.status(404).send({msg:'no record!'});
+        }else{
             res.status(200).send({record:record});
         }
     });
 }
 
 module.exports = {findSalesByDate, submitRecord, getSalesRecord, okSaleRecord, verifySaleRecord,
-                deleteSales, getMerchantRecord, getByMonth, getByDay, disproveSale}
+                deleteSales,outletSales, getMerchantRecord, getByMonth, getByDay, disproveSale}

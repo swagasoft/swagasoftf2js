@@ -2,7 +2,13 @@ const mongoose = require('mongoose');
 var moment = require('moment');
 
 var prodSchema = mongoose.Schema({
-    prod_p: {  type: Number, required: true,
+    who_create: {  type: String,
+    },
+    who_close: {  type: String,
+    },
+    who_bad_stock: {  type: String,
+    },
+     prod_p: {  type: Number, required: true,
     },
      prod_o: { type: Number, required: true
     },
@@ -77,6 +83,8 @@ var prodSchema = mongoose.Schema({
     bal_slg: { type: Number, default : 0
     },
     close :{ type: Boolean, default: false
+    },
+    confirm :{ type: Boolean, default: false
     },
     products : {
         type: Array, default:['pineapple', 'orange', 'watermelon','tigernut','carrot','sugarcane','slg']

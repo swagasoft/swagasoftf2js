@@ -37,6 +37,10 @@ var penaltySchema = mongoose.Schema({
         type: Boolean, default: false
     },
 
+    verify : {
+        type: Boolean, default: false
+    },
+
      created_at: {
         type: Date, required: true
     },

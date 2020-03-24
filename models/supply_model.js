@@ -2,36 +2,56 @@ const mongoose = require('mongoose');
 var moment = require('moment');
 
 var supplyList = mongoose.Schema({
-    pineapple: { type: Number, required: true,
+    //  supply
+    pineapple: { type: Number, default:0,
     },
-       tigernut: { type: Number, required: true,
+       tigernut: { type: Number, default:0,
     },
-    watermelon: { type: Number, required: true,
+    watermelon: { type: Number, default:0,
     },
-    carrot: { type: Number, required: true,
+    carrot: { type: Number, default:0,
     },
-    orange: { type: Number, required: true,
+    orange: { type: Number, default: 0,
     },
-    sugarcane: { type: Number, required: true,
+    sugarcane: { type: Number, default:0,
     },
-        slg: { type: Number, required: true,
+        slg: { type: Number, default:0,
     }, 
 
-    p_samp: { type: Number, required: true,
+    //  sample
+    p_samp: { type: Number, default:0
     },
-       t_samp: { type: Number, required: true,
+       t_samp: { type: Number, default:0,
     },
-    w_samp: { type: Number, required: true,
+    w_samp: { type: Number, default:0,
     },
-    c_samp: { type: Number, required: true,
+    c_samp: { type: Number, default:0,
     },
-    o_samp: { type: Number, required: true,
+    o_samp: { type: Number, default:0,
     },
-    s_samp: { type: Number, required: true,
+    s_samp: { type: Number, default:0,
     },
-        slg_samp: { type: Number, required: true,
+        slg_samp: { type: Number,default:0,
     },
+    // exchange
+    p_exg: {type:Number, default:0},
+    o_exg: {type:Number, default:0},
+    w_exg: {type:Number, default:0},
+    t_exg: {type:Number, default:0},
+    c_exg: {type:Number, default:0},
+    s_exg: {type:Number, default:0},
+    slg_exg: {type:Number, default:0},
 
+    // return
+    p_return: {type:Number, default:0},
+    o_return: {type:Number, default:0},
+    w_return: {type:Number, default:0},
+    t_return: {type:Number, default:0},
+    c_return: {type:Number, default:0},
+    s_return: {type:Number, default:0},
+    slg_return: {type:Number, default:0},
+
+  
      admin: {  type: String, required: true
     },
 
@@ -39,7 +59,7 @@ var supplyList = mongoose.Schema({
     },
  outlet: {  type: String, required: true,
     },
-     axis: { type: String,  required: true,
+     location: { type: String,  required: true,
     },
     
     qDay :{

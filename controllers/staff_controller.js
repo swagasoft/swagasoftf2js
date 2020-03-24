@@ -78,7 +78,7 @@ const submitStaff = async (req, res)=> {
         const penalizeStaff = async (req, res)=> {
             console.log(req.body);
             let userId = req.body.id;
-            let amount = req.body.values.amount;
+            let amount = req.body.values.amount; 
             let reason = req.body.values.reason;
             let admin = req.body.admin;
             await staffModel.findByIdAndUpdate({_id:userId},{penalize:true});
@@ -166,12 +166,16 @@ const submitStaff = async (req, res)=> {
             console.log(admin)
             console.log(document.admin)
             if(document.admin == admin){
+               if(document.confirm || document.verify){
+                   res.status(422).send({msg:'CANNOT EDIT RECORD!'})
+               }else{
                 document.amount = amount;
                 document.reason = reason;
                 document.edit += 1;
                 document.save().then(()=>{
                     res.status(200).send({msg:'edit sucess!'})
                 })
+               }
             }else{
                 res.status(422).send({msg:'AUTHORIZATION ERROR!'});
             }
@@ -454,6 +458,30 @@ const submitStaff = async (req, res)=> {
                     }); 
     }
 
+    const verifyPenalty = async (req, res)=> {
+        console.log(req.params.id);
+      await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{verify: true});
+      res.status(200).send({msg:'verification successful!'});
+    }
+
+    const unverifyPenalty = async (req, res)=> {
+        console.log(req.params.id);
+      await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{verify: false});
+      res.status(200).send({msg:'unverification!'});
+    }
+
+    const confirmPenalty = async (req, res)=> {
+        console.log(req.params.id);
+      await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{confirm: true});
+      res.status(200).send({msg:'confirmation success!'});
+    }
+
+    const unConfirmPenalty = async (req, res)=> {
+        console.log(req.params.id);
+      await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{confirm: false});
+      res.status(200).send({msg:'confirmation success!'});
+    }
+
 
 
 
@@ -462,4 +490,5 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
             deleteSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
-        thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment}
+        thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment, verifyPenalty, unverifyPenalty,
+        confirmPenalty,unConfirmPenalty}

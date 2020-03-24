@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 var moment = require('moment');
 
-var expenseList = mongoose.Schema({
+var expenseTwo = mongoose.Schema({
     balance: {
         type: Number,
     },
@@ -33,9 +33,6 @@ var expenseList = mongoose.Schema({
         type: Boolean, default: false
     },
 
-     edit: {
-        type: Number, default: 0
-    },
 
  product: {
         type: String,
@@ -65,4 +62,4 @@ var expenseList = mongoose.Schema({
 
 });
 
-mongoose.model('expense_list', expenseList);
+mongoose.model('expense_two', expenseTwo);

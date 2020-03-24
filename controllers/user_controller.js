@@ -8,6 +8,7 @@ var moment = require('moment');
 const expenseAccountModel = mongoose.model('account');
 const expenseListModel = mongoose.model('expense_list');
 const creditModel = mongoose.model('credit');
+const expenseTwoModel = mongoose.model('expense_two');
 
 
 
@@ -101,15 +102,22 @@ const login = (req, res, done)=> {
       console.log(req.body);
       const username = req.body.user;
       UserModel.find({"username": {$regex: username, $options:"i"}}, (err, document)=> {
-        res.status(200).send({docs: document})
+        res.status(200).send({docs: document});
       });
      
     }
 
     const updateBalance = async (req, res)=> {
+      console.log(req.body);
       let amount = parseInt(req.body.amount);
       var newCredit = new creditModel();
       newCredit.balance = amount;
+      newCredit.admin = req.body.admin;
+      newCredit.created_at = req.body.date;
+      newCredit.qDay = new Date().getDate(req.body.date);
+      newCredit.qMonth = new Date().getMonth(req.body.date) + 1;
+      newCredit.qYear = new Date().getFullYear(req.body.date) ;
+      newCredit.day = moment(req.body.date).format('l') ;
       await newCredit.save();
     
     expenseAccountModel.findOne({name:'BALANCE'}, (err, doc)=> {
@@ -135,6 +143,14 @@ const login = (req, res, done)=> {
       }
     })
     }
+
+
+    const lastCredit = (req, res)=> {
+      creditModel.findOne({}).sort({created_at: -1}).then((credit)=> {
+        res.status(200).send({credit});
+      })
+    }
+
 
     const expenseList = async (req, res)=>{
         let amountInt = parseInt(req.body.amountPaid);
@@ -169,6 +185,10 @@ const login = (req, res, done)=> {
       let oldExpense = await expenseListModel.findById({_id:req.body.id});
       expenseListModel.findById({_id:req.body.id}).then((record)=> {
       if(record.admin == req.body.admin){
+        if(record.confirm || record.verify){
+          res.status(422).send({msg:'EDIT PERIOD CLOSED!'})
+        }else{
+
         record.edit += 1;
         record.description = req.body.description;
         record.product = req.body.product;
@@ -188,6 +208,8 @@ const login = (req, res, done)=> {
           });
 
         })
+      }
+        // ens else
       }else{
         res.status(412).send({msg:'unauthorize!'});
       }
@@ -327,33 +349,80 @@ const login = (req, res, done)=> {
       })
     }
 
-    const returnExpense = async (req, res)=> {
-      console.log(req.body);
-      fileID = req.body.id;
-      admin = req.body.admin;
-      await expenseListModel.updateOne({_id:fileID},{return: true});
-      expenseListModel.findById({_id:fileID}, (err, record)=> {
-        console.log(record);
-        if(record.admin == admin){
-          expenseAccountModel.findOne({}).then((account)=> {
-            account.balance += record.amountPaid;
-            account.save().then(()=> {
-              res.status(200).send({msg:'return successful!'});
-            });
-          });
 
-        }else{
-          res.status(403).send({msg:'unauthorize!'});
-        }
-      })
-       
+
+    const returnExpense = async (req, res)=> {
+      let amountInt = parseInt(req.body.amountPaid);
+      console.log(req.body);
+     var newExpense = new expenseListModel();
+     newExpense.return =  true;
+     newExpense.description = req.body.description;
+     newExpense.product = req.body.product;
+     newExpense.amountPaid = req.body.amountPaid;
+     newExpense.receiver = req.body.receiver;
+     newExpense.admin = req.body.admin;
+     newExpense.created_at = req.body.date;
+     newExpense.information = req.body.information;
+     newExpense.qDay = new Date().getDate(req.body.date);
+     newExpense.qMonth = new Date().getMonth(req.body.date) + 1;
+     newExpense.qYear = new Date().getFullYear(req.body.date) ;
+     newExpense.day = moment(req.body.date).format('l') ;
+     await newExpense.save().then(()=> {
+       expenseAccountModel.findOne({name : 'BALANCE'},(err, doc)=> {
+         if(doc){
+           doc.balance += amountInt;
+           doc.save().then(()=> {   res.status(200).send({msg: 'success!'})})
+         }else{
+           res.status(200).send({msg: 'return saved, but not deducted'});
+         }
+       })
+     }).catch((err)=> {
+       res.status(422).send({msg:'error saving record'});
+     })
     }
 
+const submitExpense2 =async  (req, res)=> {
+  console.log(req.body);
+    let amountInt = parseInt(req.body.amountPaid);
+   console.log(req.body);
+  var newExpense = new expenseTwoModel();
+  newExpense.description = req.body.description;
+  newExpense.product = req.body.product;
+  newExpense.amountPaid = req.body.amountPaid;
+  newExpense.receiver = req.body.receiver;
+  newExpense.admin = req.body.admin;
+  newExpense.created_at = req.body.date;
+  newExpense.information = req.body.information;
+  newExpense.qDay = new Date().getDate(req.body.date);
+  newExpense.qMonth = new Date().getMonth(req.body.date) + 1;
+  newExpense.qYear = new Date().getFullYear(req.body.date) ;
+  newExpense.day = moment(req.body.date).format('l') ;
+  await newExpense.save().then(()=> {
+    
+  res.status(200).send({msg:'success!'});
+  }).catch((err)=> {
+    console.log(err);
+    res.status(422).send({msg:'error saving record!'});
+  });
 
+}
+
+const getExpense2 = async (req, res)=> {
+  expenseTwoModel.find({$and:[{qMonth : req.body.month}
+    ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
+    if(record.length == 0){
+        res.status(404).send({msg:'no record!'});
+    }else{
+        console.log(record);
+        res.status(200).send({record:record});
+    }
+});
+
+}
 
 
 module.exports = {activateUser, login, createUser, getAllUsers, getCredit,
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
   getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,
   searcExpense, getUserDetails, resetPassword,findExpensebyDate, thisMonthExpense ,
-  confirmExpense, updateExpense, returnExpense}
+  confirmExpense, updateExpense, returnExpense, lastCredit, submitExpense2, getExpense2}

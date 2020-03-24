@@ -21,4 +21,5 @@ require('./penalty_model');
 require('./fruit_model');
 require('./merchant_Model');
 require('./payRecord_model');
+require('./expense2_model');
 
