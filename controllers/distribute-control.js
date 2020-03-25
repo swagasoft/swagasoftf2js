@@ -150,6 +150,11 @@ const unVerifySupply = async(req, res)=> {
 const updateSupply = async (req, res)=> {
     console.log(req.body);
   await  SupplyModel.findById({_id:req.body.id}).then((supply)=> {
+        if(supply.verify || supply.confirm){
+            res.status(412).send({msg:'EDIT ACCESS DENIED!'})
+        }else{
+
+        
       prodModel.findById({_id:req.body.prod_id}).then((prod)=> {
         //   deduct product supplied from supply
         prod.sup_p -= supply.pineapple + supply.p_samp + supply.p_exg;
@@ -247,7 +252,8 @@ const updateSupply = async (req, res)=> {
       res.status(422).send({msg:'error updating record'});
   })
         })
-      })
+      } }  //close
+       )
 
    
 }
