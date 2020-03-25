@@ -54,6 +54,7 @@ var supplyList = mongoose.Schema({
   
      admin: {  type: String, required: true
     },
+    edit:{type:Number, default:0},
 
  prod_id: { type: String, required: true,
     },
@@ -71,6 +72,8 @@ var supplyList = mongoose.Schema({
   qYear :{
       type:Number, 
   },
+  confirm:{type:Boolean, default: false},
+  verify:{type:Boolean, default: false},
   day : {
    type: String, required: true
 },

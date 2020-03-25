@@ -181,6 +181,27 @@ const login = (req, res, done)=> {
       })
     }
 
+    const updateExpenseTwo = async (req, res)=> {
+      console.log(req.body,'expense 2')
+      expenseTwoModel.findById({_id:req.body.id}).then((record)=> {
+        if(record.admin == req.body.admin){
+          record.edit += 1;
+          record.description = req.body.description;
+          record.product = req.body.product;
+          record.product = req.body.product;
+          record.amountPaid = req.body.amountPaid;
+          record.receiver = req.body.receiver;
+          record.information = req.body.information;
+          record.save().then(()=> {
+            res.status(200).send({msg:'edited successful!y'})
+          })
+          // ens else
+        }else{
+          res.status(412).send({msg:'unauthorize!'});
+        }
+        });
+    }
+
     const updateExpense = async(req, res)=> {
       let oldExpense = await expenseListModel.findById({_id:req.body.id});
       expenseListModel.findById({_id:req.body.id}).then((record)=> {
@@ -420,9 +441,27 @@ const getExpense2 = async (req, res)=> {
 
 }
 
+const expense2byDate = async (req, res)=> {
+  console.log(req.body);
+  let queryDate = "";
+  let dayString = req.body.dp.day.toString();
+  let yearString = req.body.dp.year.toString();
+  let monthString = req.body.dp.month.toString();
+  queryDate = monthString +'/'+dayString+'/'+yearString;
+  console.log('dateee',queryDate);
+  await expenseTwoModel.find({day : queryDate}).then((expenses)=>{
+      console.log(expenses);
+      if(expenses.length == 0){
+          res.status(404).send({msg:'no record for this day!'});
+      }else{
+          res.status(200).send({expenses: expenses});
+      }
+  })
+}
 
-module.exports = {activateUser, login, createUser, getAllUsers, getCredit,
+
+module.exports = {activateUser, login, createUser, getAllUsers, getCredit, expense2byDate,
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
-  getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,
+  getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,updateExpenseTwo,
   searcExpense, getUserDetails, resetPassword,findExpensebyDate, thisMonthExpense ,
   confirmExpense, updateExpense, returnExpense, lastCredit, submitExpense2, getExpense2}

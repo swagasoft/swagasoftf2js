@@ -16,7 +16,6 @@ const submitProd = async (req, res)=> {
      prodModel.findOne({close:true}).sort({created_at:-1}).then((record)=> {
          console.log('record',record);
         if(record){
-            console.log('new prod one', record);
             var newProd = new prodModel();
             newProd.open_p = record.bal_p;
             newProd.open_o = record.bal_o;
@@ -130,7 +129,128 @@ const sumbitBadStock = async (req, res)=> {
     });
 }
 
+const confirmSupply = async(req, res)=> {
+    await SupplyModel.updateOne({_id:req.params.id},{confirm:true});
+    res.status(200).send({msg:'confirmed!'});
+}
+const unConfirmSupply = async(req, res)=> {
+    await SupplyModel.updateOne({_id:req.params.id},{confirm:false});
+    res.status(200).send({msg:'un-confirmed!'});
+}
+const verifySupply = async(req, res)=> {
+    await SupplyModel.updateOne({_id:req.params.id},{verify:true});
+    res.status(200).send({msg:'verified!'});
+}
+const unVerifySupply = async(req, res)=> {
+    await SupplyModel.updateOne({_id:req.params.id},{verify:false});
+    res.status(200).send({msg:'un-verified!'});
+}
 
+
+const updateSupply = async (req, res)=> {
+    console.log(req.body);
+  await  SupplyModel.findById({_id:req.body.id}).then((supply)=> {
+      prodModel.findById({_id:req.body.prod_id}).then((prod)=> {
+        //   deduct product supplied from supply
+        prod.sup_p -= supply.pineapple + supply.p_samp + supply.p_exg;
+        prod.sup_o -= supply.orange + supply.o_samp + supply.o_exg;
+        prod.sup_w -=  supply.watermelon + supply.w_samp + supply.w_exg;
+        prod.sup_t -= supply.tigernut + supply.t_samp + supply.t_exg;
+        prod.sup_c -=  supply.carrot +supply.c_samp + supply.c_exg;
+        prod.sup_s -=  supply.sugarcane + supply.s_samp + supply.s_exg;
+        prod.sup_slg -= supply.slg + supply.slg_samp + supply.slg_exg;
+        // add return to balance
+        prod.bal_p -= supply.p_return;
+        prod.bal_o -= supply.o_return;
+        prod.bal_w -= supply.w_return;
+        prod.bal_t -= supply.t_return;
+        prod.bal_c -= supply.c_return;
+        prod.bal_s -= supply.s_return;
+        prod.bal_slg -= supply.slg_return;
+          // add return to balance body
+          prod.bal_p += req.body.p_return;
+          prod.bal_o += req.body.o_return;
+          prod.bal_w += req.body.w_return;
+          prod.bal_t += req.body.t_return;
+          prod.bal_c += req.body.c_return;
+          prod.bal_s += req.body.s_return;
+          prod.bal_slg += req.body.slg_return;
+        // update bal
+        prod.bal_p += supply.pineapple + supply.p_samp + supply.p_exg;
+        prod.bal_o += supply.orange + supply.o_samp + supply.o_exg;
+        prod.bal_w +=  supply.watermelon + supply.w_samp + supply.w_exg;
+        prod.bal_t += supply.tigernut + supply.t_samp + supply.t_exg;
+        prod.bal_c +=  supply.carrot +supply.c_samp + supply.c_exg;
+        prod.bal_s +=  supply.sugarcane + supply.s_samp + supply.s_exg;
+        prod.bal_slg += supply.slg + supply.slg_samp + supply.slg_exg;
+        // add to supply
+        prod.sup_p += req.body.pineapple + req.body.p_samp + req.body.p_exg;
+        prod.sup_o += req.body.orange + req.body.o_samp + req.body.o_exg;
+        prod.sup_w +=  req.body.watermelon + req.body.w_samp + req.body.w_exg;
+        prod.sup_t += req.body.tigernut + req.body.t_samp + req.body.t_exg;
+        prod.sup_c +=  req.body.carrot +req.body.c_samp + req.body.c_exg;
+        prod.sup_s +=  req.body.sugarcane + req.body.s_samp + req.body.s_exg;
+        prod.sup_slg += req.body.slg + req.body.slg_samp + req.body.slg_exg;
+        // deduct from balance
+        prod.bal_p -=  req.body.pineapple + req.body.p_samp + req.body.p_exg ;
+        prod.bal_o -=  req.body.orange + req.body.o_samp + req.body.o_exg ;
+        prod.bal_w -= req.body.watermelon + req.body.w_samp + req.body.w_exg ;
+        prod.bal_t  -= req.body.tigernut + req.body.t_samp +req.body.t_exg ;
+        prod.bal_c -= req.body.carrot +req.body.c_samp+ req.body.c_exg ;
+        prod.bal_s -= req.body.sugarcane + req.body.s_samp+ req.body.s_exg ;
+        prod.bal_slg -= req.body.slg + req.body.slg_samp + req.body.slg_exg ;
+        prod.save().then(()=> {
+
+             
+       //  supply
+       supply.orange = req.body.orange - req.body.o_return;
+       supply.watermelon = req.body.watermelon - req.body.w_return;
+       supply.tigernut = req.body.tigernut - req.body.t_return;
+       supply.pineapple = req.body.pineapple  - req.body.p_return;
+       supply.carrot = req.body.carrot  - req.body.c_return;
+       supply.sugarcane = req.body.sugarcane - req.body.s_return;
+       supply.slg = req.body.slg - req.body.slg_return;
+         //  sample
+         supply.o_samp = req.body.o_samp;
+         supply.w_samp = req.body.w_samp ;
+         supply.t_samp = req.body.t_samp ;
+         supply.p_samp = req.body.p_samp ;
+         supply.c_samp = req.body.c_samp;
+         supply.s_samp = req.body.s_samp ;
+         supply.slg_samp = req.body.slg_samp ;
+
+           // exchange
+           supply.p_exg = req.body.p_exg ;
+           supply.o_exg = req.body.o_exg ;
+           supply.w_exg = req.body.w_exg ;
+           supply.t_exg = req.body.t_exg ;
+           supply.c_exg = req.body.c_exg ;
+           supply.s_exg = req.body.s_exg ;
+           supply.slg_exg = req.body.slg_exg ;
+     // return
+     supply.p_return = req.body.p_return ;
+     supply.o_return = req.body.o_return ;
+     supply.w_return = req.body.w_return ;
+     supply.t_return = req.body.t_return ;
+     supply.c_return = req.body.c_return ;
+     supply.s_return = req.body.s_return ;
+     supply.slg_return = req.body.slg_return ;
+
+     supply.admin = req.body.admin;
+     supply.outlet = req.body.outlet;
+     supply.location = req.body.location;
+     supply.edit += 1;
+     supply.save().then(()=> {
+         res.status(200).send({msg:'update successful...!'});
+     })
+  }).catch((err)=> {
+      res.status(422).send({msg:'error updating record'});
+  })
+        })
+      })
+
+   
+}
 
 const supplyOutlet = async (req, res)=> {
     console.log(req.body);
@@ -303,9 +423,71 @@ const supplyOutlet = async (req, res)=> {
         })
     }
 
+    const editBadStock = async (req, res)=> {
+        prodModel.findById({_id:req.body.id}).then((production)=> {
+            production.bal_p += production.bad_p;
+            production.bal_o += production.bad_o;
+            production.bal_w += production.bad_w;
+            production.bal_t += production.bad_t;
+            production.bal_c += production.bad_c;
+            production.bal_s += production.bad_s;
+            production.bal_slg += production.bad_slg;
+            production.save().then((prod)=> {
+                prod.bad_p = req.body.bad_p;
+                prod.bad_o = req.body.bad_o;
+                prod.bad_w = req.body.bad_w;
+                prod.bad_t = req.body.bad_t;
+                prod.bad_c = req.body.bad_c;
+                prod.bad_s = req.body.bad_s;
+                prod.bad_slg = req.body.bad_slg;
+                
+                // deduct from balance
+                prod.bal_p -= req.body.bad_p;
+                prod.bal_o -= req.body.bad_o;
+                prod.bal_w -= req.body.bad_w;
+                prod.bal_t -= req.body.bad_t;
+                prod.bal_c -= req.body.bad_c;
+                prod.bal_s -= req.body.bad_s;
+                prod.bal_slg -= req.body.bad_slg;
+                prod.save().then(()=> {
+                    res.status(200).send({msg:' update was successful!'});
+                })
+            })
+        })
+    }
+
     const editProduction = async (req, res)=> {
-        console.log(req.body);
-        res.status(200).send({msg:' confirm'})
+    await  prodModel.findById({_id:req.body.id}).then((production)=> {
+            production.bal_p -= production.prod_p;
+            production.bal_o -= production.prod_o;
+            production.bal_w -= production.prod_w;
+            production.bal_t -= production.prod_t;
+            production.bal_c -= production.prod_c;
+            production.bal_s -= production.prod_s;
+            production.bal_slg -= production.prod_slg;
+            production.save().then((prod)=>{
+                prod.prod_p = req.body.pineapple;
+                prod.prod_o = req.body.orange;
+                prod.prod_w = req.body.watermelon;
+                prod.prod_t = req.body.tigernut;
+                prod.prod_c = req.body.carrot;
+                prod.prod_s = req.body.sugarcane;
+                prod.prod_slg = req.body.slg;
+                
+                // balance
+                prod.bal_p += req.body.pineapple;
+                prod.bal_o += req.body.orange;
+                prod.bal_w += req.body.watermelon;
+                prod.bal_t += req.body.tigernut;
+                prod.bal_c += req.body.carrot;
+                prod.bal_s += req.body.sugarcane;
+                prod.bal_slg += req.body.slg;
+                prod.save().then(()=> {
+                    res.status(200).send({msg:' update was successful!'});
+                })
+            })
+        })
+       
     }
 
     const UnConfirmProd = async (req, res)=> {
@@ -347,4 +529,5 @@ const supplyOutlet = async (req, res)=> {
 
 
 module.exports = {submitProd,submitReturns, getProduction, sumbitBadStock, supplyOutlet, closeRecord,
-                editProduction, UnConfirmProd, confirmProd, outletSupplies, productionList}
+                editProduction, UnConfirmProd, confirmProd,editBadStock, outletSupplies, productionList,
+                confirmSupply,unConfirmSupply,verifySupply,unVerifySupply, updateSupply}

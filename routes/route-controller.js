@@ -101,11 +101,11 @@ router.post('/find-outlet-sales', jwt_helper.verifyJwtToken,checkValidity,mercha
 router.get('/get-limit-staff', jwt_helper.verifyJwtToken,checkValidity, staffController.getLimitStaff);
 router.post('/this-month-advs', jwt_helper.verifyJwtToken,checkValidity, staffController.thisMonthAdvs);
 router.put('/update-expense', jwt_helper.verifyJwtToken,checkValidity,userController.updateExpense);
+router.post('/update-expense-two', jwt_helper.verifyJwtToken,checkValidity,userController.updateExpenseTwo);
 router.get('/reset-payroll', jwt_helper.verifyJwtToken,checkValidity, staffController.resetPayRoll);
 router.post('/get-pay-record', jwt_helper.verifyJwtToken,checkValidity, staffController.getPayRecord);
 router.post('/record-department', jwt_helper.verifyJwtToken,checkValidity, staffController.recordDepartment);
 router.post('/submit-returns',jwt_helper.verifyJwtToken,checkValidity, distController.submitReturns);
-router.post('/edit-production', jwt_helper.verifyJwtToken,checkValidity, distController.editProduction);
 router.get('/confirm-prod:id', jwt_helper.verifyJwtToken,checkValidity,distController.confirmProd);
 router.get('/un-confirm-prod:id', jwt_helper.verifyJwtToken,checkValidity,distController.UnConfirmProd);
 router.post('/get-outlet-supplies', jwt_helper.verifyJwtToken,checkValidity,distController.outletSupplies);
@@ -116,13 +116,21 @@ router.get('/confirm-penalty:id', jwt_helper.verifyJwtToken,checkValidity,staffC
 router.get('/un-confirm-penalty:id', jwt_helper.verifyJwtToken,checkValidity,staffController.unConfirmPenalty);
 router.post('/submit-expense-two', jwt_helper.verifyJwtToken, checkValidity, userController.submitExpense2);
 router.post('/get-expense-two', jwt_helper.verifyJwtToken, checkValidity, userController.getExpense2);
+router.post('/expense-two-by-date', jwt_helper.verifyJwtToken,checkValidity,userController.expense2byDate)
+router.post('/edit-production',jwt_helper.verifyJwtToken,checkValidity,distController.editProduction);
+router.post('/edit-bad-stock',jwt_helper.verifyJwtToken,checkValidity,distController.editBadStock);
+router.get('/confirm-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.confirmSupply);
+router.get('/un-confirm-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.unConfirmSupply);
+router.get('/verify-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.verifySupply);
+router.get('/un-verify-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.unVerifySupply);
+router.post('/update-supply', jwt_helper.verifyJwtToken,checkValidity,distController.updateSupply);
+
 
 
  function checkValidity(req, res, next){
      const userID = req._id;
      console.log(userID)
      UserModel.findById({_id: userID}, (err, user)=> {
-         console.log(user);
          if(user){
 
              if(user.active){

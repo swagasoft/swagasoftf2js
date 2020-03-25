@@ -86,6 +86,8 @@ var prodSchema = mongoose.Schema({
     },
     confirm :{ type: Boolean, default: false
     },
+    edit :{ type: String, default: 0
+    },
     products : {
         type: Array, default:['pineapple', 'orange', 'watermelon','tigernut','carrot','sugarcane','slg']
     },
