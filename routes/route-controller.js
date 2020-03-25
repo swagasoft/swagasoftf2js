@@ -110,6 +110,7 @@ router.get('/confirm-prod:id', jwt_helper.verifyJwtToken,checkValidity,distContr
 router.get('/un-confirm-prod:id', jwt_helper.verifyJwtToken,checkValidity,distController.UnConfirmProd);
 router.post('/get-outlet-supplies', jwt_helper.verifyJwtToken,checkValidity,distController.outletSupplies);
 router.post('/production-list', jwt_helper.verifyJwtToken,checkValidity,distController.productionList);
+router.post('/prod-by-date', jwt_helper.verifyJwtToken,checkValidity,distController.prodByDate);
 router.get('/verify-penalty:id', jwt_helper.verifyJwtToken,checkValidity,staffController.verifyPenalty);
 router.get('/un-verify-penalty:id', jwt_helper.verifyJwtToken,checkValidity,staffController.unverifyPenalty);
 router.get('/confirm-penalty:id', jwt_helper.verifyJwtToken,checkValidity,staffController.confirmPenalty);

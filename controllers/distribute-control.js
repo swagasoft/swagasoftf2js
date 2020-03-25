@@ -524,10 +524,20 @@ const supplyOutlet = async (req, res)=> {
                     res.status(200).send({record:record});
                 }
             })
-      
+    }
+
+    const prodByDate = async(req, res)=> {
+        prodModel.find({$and:[{qMonth:req.body.month},
+            {qYear:req.body.year},{qDay:req.body.day}]}).sort({created_at:-1}).then((record)=> {
+                if(record.length == 0){
+                    res.status(404).send({msg:'no record!'});
+                }else{
+                    res.status(200).send({record:record});
+                }
+            })
     }
 
 
 module.exports = {submitProd,submitReturns, getProduction, sumbitBadStock, supplyOutlet, closeRecord,
                 editProduction, UnConfirmProd, confirmProd,editBadStock, outletSupplies, productionList,
-                confirmSupply,unConfirmSupply,verifySupply,unVerifySupply, updateSupply}
+                confirmSupply,unConfirmSupply,verifySupply,unVerifySupply, updateSupply, prodByDate}
