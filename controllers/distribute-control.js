@@ -359,7 +359,7 @@ const supplyOutlet = async (req, res)=> {
 
      const  closeRecord = async (req, res)=> {
          let findUser = await UserModel.findById({_id:req._id});
-         console.log(findUser);
+         console.log('close the record...');
           await prodModel.findById({_id:req.params.id}).then((doc)=> {
              
                if(doc){
