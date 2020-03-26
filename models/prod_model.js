@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 var moment = require('moment');
 
 var prodSchema = mongoose.Schema({
-    who_create: {  type: String,
+    who_create: {  type: String, required: true
     },
     who_close: {  type: String,
     },

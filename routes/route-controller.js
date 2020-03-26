@@ -17,8 +17,8 @@ const fetch = require("node-fetch");
 router.post('/login', userController.login);
 router.post('/create-user', userController.createUser);
 
-// router.get('/disable-user:id', jwt_helper.verifyJwtToke, userController.disableUser);
-// router.get('/activate-user:id', jwt_helper.verifyJwtToke, userController.activateUser);
+router.get('/disable-user:id', jwt_helper.verifyJwtToken,checkValidity, userController.disableUser);
+router.get('/activate-user:id', jwt_helper.verifyJwtToken,checkValidity, userController.activateUser);
 router.post('/search-username', jwt_helper.verifyJwtToken,checkValidity, userController.searchUser);
 router.get('/delete-user:id', jwt_helper.verifyJwtToken,checkValidity, userController.deleteUser);
 router.get('/delete-outlet:id', jwt_helper.verifyJwtToken,checkValidity,OutletController.deleteOutlet);
