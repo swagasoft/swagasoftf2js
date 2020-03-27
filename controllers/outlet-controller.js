@@ -41,6 +41,47 @@ const createOutlet = async(req, res)=> {
         });
 }
 
+
+
+const editOutlet = async(req, res)=> {
+  console.log(req.body);
+  OutletModel.findById({_id: req.body.id},(err, outlet)=> {
+    if(outlet.admin != req.body.admin){
+      res.status(401).send({msg:'AUTHORIZATION FAIL!'})
+    }else{
+
+      const codeToUpper = req.body.code.toUpperCase();
+      outlet.code =  codeToUpper;
+      outlet.edit += 0;
+      outlet.p_price = req.body.p_price;
+      outlet.o_price = req.body.o_price;
+      outlet.w_price = req.body.w_price;
+      outlet.t_price = req.body.t_price;
+      outlet.c_price = req.body.c_price;
+      outlet.s_price = req.body.s_price;
+      outlet.slg_price = req.body.slg_price;
+      outlet.p_max = req.body.p_max;
+      outlet.o_max = req.body.o_max;
+      outlet.w_max = req.body.w_max;
+      outlet.t_max = req.body.t_max;
+      outlet.c_max = req.body.c_max;
+      outlet.s_max = req.body.s_max;
+      outlet.slg_max = req.body.slg_max;
+      outlet.location = req.body.location;
+      outlet.save().then(()=>{
+        res.status(200).send({msg:'success!'})
+      })
+    }
+  }).catch((err)=> {
+    console.log(err);
+    res.status(403).send({msg:'error updating record'})
+  }).catch((err)=> {
+    console.log(err);
+    res.status(402).send({msg:'cannot not process update!'});
+  })
+}
+
+
 const getAll = async (req, res)=> {
     OutletModel.find({}).sort({created_at: -1}).then((docs)=> {
       res.status(200).send(docs);
@@ -72,13 +113,6 @@ const deleteOutlet =  async (req, res)=> {
     });
   }
 
-  const editOutlet = async(req, res)=> {
-      console.log(req.params.id);
-      const fileID = req.params.id;
-      OutletModel.findById({_id: fileID},(err, doc)=> {
-          res.status(200).send({doc : doc });
-      });
-  }
 
   const getAllMerchant = async (req, res)=> {
 

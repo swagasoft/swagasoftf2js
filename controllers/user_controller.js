@@ -184,6 +184,9 @@ const login = (req, res, done)=> {
     const updateExpenseTwo = async (req, res)=> {
       console.log(req.body,'expense 2')
       expenseTwoModel.findById({_id:req.body.id}).then((record)=> {
+        if(record.confirm || record.verify){
+          res.status(422).send({msg:'edit is closed!'});
+        }else{
         if(record.admin == req.body.admin){
           record.edit += 1;
           record.description = req.body.description;
@@ -199,6 +202,8 @@ const login = (req, res, done)=> {
         }else{
           res.status(412).send({msg:'unauthorize!'});
         }
+      }
+
         });
     }
 
@@ -272,6 +277,12 @@ const login = (req, res, done)=> {
     const confirmExpense = async (req, res)=> {
       console.log(req.params.id);
     await  expenseListModel.findByIdAndUpdate({_id:req.params.id},{confirm:true});
+      res.status(200).send({msg:'success'});
+    }
+
+    const unConfirmExpense = async (req, res)=> {
+      console.log(req.params.id);
+    await  expenseListModel.findByIdAndUpdate({_id:req.params.id},{confirm:false});
       res.status(200).send({msg:'success'});
     }
 
@@ -464,4 +475,5 @@ module.exports = {activateUser, login, createUser, getAllUsers, getCredit, expen
    disableUser, searchUser, deleteUser, updateBalance, expenseList,deleteCredit,
   getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,updateExpenseTwo,
   searcExpense, getUserDetails, resetPassword,findExpensebyDate, thisMonthExpense ,
-  confirmExpense, updateExpense, returnExpense, lastCredit, submitExpense2, getExpense2}
+  confirmExpense, updateExpense, returnExpense, lastCredit, submitExpense2, getExpense2,
+  unConfirmExpense}

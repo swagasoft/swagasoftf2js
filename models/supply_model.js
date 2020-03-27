@@ -51,6 +51,14 @@ var supplyList = mongoose.Schema({
     s_return: {type:Number, default:0},
     slg_return: {type:Number, default:0},
 
+    rate_p:{type:Number, required: true},
+    rate_o:{type:Number, required: true},
+    rate_w:{type:Number, required: true},
+    rate_t:{type:Number, required: true},
+    rate_c:{type:Number, required: true},
+    rate_s:{type:Number, required: true},
+    rate_slg:{type:Number, required: true},
+
   
      admin: {  type: String, required: true
     },

@@ -27,7 +27,7 @@ router.get('/get-all-users', jwt_helper.verifyJwtToken,checkValidity, userContro
 router.post('/create-outlet', jwt_helper.verifyJwtToken,checkValidity,OutletController.createOutlet);
 router.get('/get-all-oulets', jwt_helper.verifyJwtToken,checkValidity,OutletController.getAll);
 router.post('/search-outlet', jwt_helper.verifyJwtToken,checkValidity,OutletController.searcOutlet);
-router.get('/edit-outlet:id', jwt_helper.verifyJwtToken,checkValidity, OutletController.editOutlet);
+router.post('/edit-outlet', jwt_helper.verifyJwtToken,checkValidity, OutletController.editOutlet);
 router.post('/update-balance', jwt_helper.verifyJwtToken,checkValidity, userController.updateBalance);
 router.get('/last-credit', jwt_helper.verifyJwtToken,checkValidity, userController.lastCredit);
 router.post('/submit-expense', jwt_helper.verifyJwtToken,checkValidity, userController.expenseList);
@@ -35,6 +35,7 @@ router.post('/return-expense', jwt_helper.verifyJwtToken,checkValidity, userCont
 router.post('/this-month-expense', jwt_helper.verifyJwtToken,checkValidity, userController.thisMonthExpense);
 router.get('/get-expenses', jwt_helper.verifyJwtToken,checkValidity, userController.getExpense);
 router.get('/confirm-expense:id', jwt_helper.verifyJwtToken,checkValidity, userController.confirmExpense);
+router.get('/un-confirm-expense:id', jwt_helper.verifyJwtToken,checkValidity, userController.unConfirmExpense);
 
 router.get('/get-credit', jwt_helper.verifyJwtToken,checkValidity, userController.getCredit);
 router.get('/get-balance', jwt_helper.verifyJwtToken,checkValidity, userController.getBalance);

@@ -258,7 +258,7 @@ const updateSupply = async (req, res)=> {
    
 }
 
-const supplyOutlet = async (req, res)=> {
+const supplyOutlet = async (req, res)=> { 
     console.log(req.body);
     await prodModel.findById({_id:req.body.fileId}).then((production)=> {
         if(!production){
@@ -272,10 +272,15 @@ const supplyOutlet = async (req, res)=> {
         production.bal_s += req.body.s_return;
         production.bal_slg += req.body.slg_return;
         production.save().then((prod)=> {
-            console.log('after save', prod);
-     
-
     var newSupply = new SupplyModel();
+    // rate
+    newSupply.rate_p = req.body.rate_p;
+    newSupply.rate_o = req.body.rate_o;
+    newSupply.rate_w = req.body.rate_w;
+    newSupply.rate_t = req.body.rate_t;
+    newSupply.rate_c = req.body.rate_c;
+    newSupply.rate_s = req.body.rate_s;
+    newSupply.rate_slg = req.body.rate_slg;
     //  supply
     newSupply.orange = req.body.orange - req.body.o_return;
     newSupply.watermelon = req.body.watermelon - req.body.w_return;
@@ -371,7 +376,10 @@ const supplyOutlet = async (req, res)=> {
                }else{
                    res.status(422).send({msg:'error clossing record.'});
                }
-            });
+            }).catch((err)=> {
+                console.log(err);
+                res.status(412).send({msg:'error! no open production to close!'});
+            })
         }
 
     const submitReturns = async(req, res)=> {

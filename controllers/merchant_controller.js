@@ -3,6 +3,13 @@ const merchantModel = mongoose.model('merchant');
 var moment = require('moment');
 
 const submitRecord = async (req, res)=> {
+    let day = moment(req.body.date).format('l') ;
+    await merchantModel.find({$and:[{outletCode: req.body.outletCode},
+        {merchantName: req.body.merchantName},{day:day}]}).then((merchant)=> {
+            if(merchant.length != 0){
+                res.status(422).send({msg:'merchant already exist for today!'});
+            }else{
+        
     var merchantSale = new merchantModel ();
     merchantSale.admin = req.body.admin;
     merchantSale.merchantName = req.body.merchantName;
@@ -21,6 +28,8 @@ const submitRecord = async (req, res)=> {
         console.log(err);
         res.status(422).send({msg:'error submitting record!'});
     })
+}
+});
 }
 
 const getSalesRecord = async (req, res)=> {

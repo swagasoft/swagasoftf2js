@@ -36,6 +36,9 @@ var outletSchema = mongoose.Schema({
     merchant_rate: {  type: Number, required: true,
     },
 
+    edit: { type: Number, default:0
+    },
+
     axis: { type: String, required: true,
     },
      location: { type: String, required: true,
