@@ -47,7 +47,7 @@ const editOutlet = async(req, res)=> {
   console.log(req.body);
   OutletModel.findById({_id: req.body.id},(err, outlet)=> {
     if(outlet.admin != req.body.admin){
-      res.status(401).send({msg:'AUTHORIZATION FAIL!'})
+      res.status(401).send({msg:'AUTHORIZATION ERROR!'})
     }else{
 
       const codeToUpper = req.body.code.toUpperCase();

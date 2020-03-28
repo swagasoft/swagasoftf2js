@@ -64,6 +64,16 @@ const submitProd = async (req, res)=> {
             newProd.prod_s = req.body.sugarcane;
             newProd.prod_slg = req.body.slg;
             newProd.created_at = req.body.date;
+            // balance
+            newProd.bal_p =  req.body.pineapple ;
+            newProd.bal_o =  req.body.orange ;
+            newProd.bal_w =  req.body.watermelon ;
+            newProd.bal_t =  req.body.tigernut ;
+            newProd.bal_c =  req.body.carrot ;
+            newProd.bal_s =  req.body.sugarcane ;
+            newProd.bal_slg =  req.body.slg ;
+            newProd.who_create = req.body.admin;
+
             newProd.qDay = new Date().getDate(req.body.date);
             newProd.qMonth = new Date().getMonth(req.body.date) + 1;
             newProd.qYear = new Date().getFullYear(req.body.date) ;
@@ -104,6 +114,10 @@ const getProduction = async (req, res)=> {
 const sumbitBadStock = async (req, res)=> {
     console.log(req.body)
     await prodModel.findById({_id:req.body.id}).then((doc)=> {
+        if(!doc){
+            res.status(404).send({msg:'PRODUCTION NOT FOUND!'});
+        }else{
+         
         doc.who_bad_stock = req.body.admin;
         doc.bad_p += req.body.bad_p;
         doc.bad_o += req.body.bad_o;
@@ -113,20 +127,23 @@ const sumbitBadStock = async (req, res)=> {
         doc.bad_s += req.body.bad_s;
         doc.bad_slg += req.body.bad_slg;
         // update balance stock
-        doc.bal_p - doc.bad_p;
-        doc.bal_o - doc.bad_o;
-        doc.bal_w - doc.bad_w;
-        doc.bal_t - doc.bad_t;
-        doc.bal_c - doc.bad_c;
-        doc.bal_s - doc.bad_s;
-        doc.bal_slg - doc.bad_slg;
+        doc.bal_p -= req.body.bad_p;
+        doc.bal_o -= req.body.bad_o;
+        doc.bal_w -= req.body.bad_w;
+        doc.bal_t -= req.body.bad_t;
+        doc.bal_c -= req.body.bad_c;
+        doc.bal_s -= req.body.bad_s;
+        doc.bal_slg -= req.body.bad_slg;
         doc.save().then(()=> {
             res.status(200).send({msg:'submitted successfully'});
         }).catch((err)=> {
             console.log(err);
             res.status(422).send({msg:'something went wrong'});
         });
-    });
+    
+    }
+        //
+    })
 }
 
 const confirmSupply = async(req, res)=> {
@@ -439,6 +456,9 @@ const supplyOutlet = async (req, res)=> {
 
     const editBadStock = async (req, res)=> {
         prodModel.findById({_id:req.body.id}).then((production)=> {
+            if(production.confirm){
+                res.status(412).send({msg:'EDIT IS LOCKED'});
+            }else{
             production.bal_p += production.bad_p;
             production.bal_o += production.bad_o;
             production.bal_w += production.bad_w;
@@ -467,11 +487,17 @@ const supplyOutlet = async (req, res)=> {
                     res.status(200).send({msg:' update was successful!'});
                 })
             })
+            //
+        }
         })
     }
 
     const editProduction = async (req, res)=> {
     await  prodModel.findById({_id:req.body.id}).then((production)=> {
+        if(production.confirm){
+            res.status(422).send({msg:'PRODUCTION LIS LOCKED!'});
+        }else{
+        
             production.bal_p -= production.prod_p;
             production.bal_o -= production.prod_o;
             production.bal_w -= production.prod_w;
@@ -499,7 +525,8 @@ const supplyOutlet = async (req, res)=> {
                 prod.save().then(()=> {
                     res.status(200).send({msg:' update was successful!'});
                 })
-            })
+            })   
+        }
         })
        
     }
