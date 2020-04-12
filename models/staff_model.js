@@ -13,6 +13,8 @@ var staffSchema = mongoose.Schema({
     },
      bankNumber: { type: String, required: true,  unique: true
     },
+     bankName: { type: String,  
+    },
      bankAccountType: { type: String, required: true,
     },
      salary: { type: Number, default: 0
@@ -33,7 +35,7 @@ var staffSchema = mongoose.Schema({
     },
     edited: { type: Number, default: 0
     },
-    admin: { type: String
+    admin: { type: String, required: true
     },
     settled :{type: Boolean , default: false
     },

@@ -14,6 +14,8 @@ const submitStaff = async (req, res)=> {
     var newStaff = new staffModel();
         newStaff.fullname = req.body.fullname;
         newStaff.phone = req.body.phone;
+        newStaff.phone = req.body.phone;
+        newStaff.bankName = req.body.bankName;
         newStaff.department = req.body.department;
         newStaff.bankAccountName = banktoUpp;
         newStaff.address = req.body.address; 
@@ -34,14 +36,18 @@ const submitStaff = async (req, res)=> {
                 res.status(422).send({msg :'account number already exist!'});
               }else if(err.errors.fullname){
                 res.status(422).send({msg :'fullname already exist!'});
+              }else if(err.errors.bankAccountType){
+                res.status(422).send({msg :'account type is required!'});
+              }else if(err.errors.department){
+                res.status(422).send({msg :'department is required!'});
               }else{
-                res.status(501).send({msg :'eror in user information'});
+                res.status(501).send({msg :'eror exist in user information'});
               }
           });
 }
 
         const getAllStaff =async (req, res)=> {
-           await  staffModel.find({}).then((staff)=> {
+           await  staffModel.find({}).sort({created_at: -1}).then((staff)=> {
                  res.status(200).send({staff: staff});
              });  
         }
