@@ -20,8 +20,8 @@ var fruitSchema = mongoose.Schema({
     },
     paid_for : { type: String, default:null
     },
-    size : { type: String, required: true
-    },
+    size : [{ type: String, required: true 
+    }],
     bottles : { type: Number, default:null
     },
     buyer : { type: String, required: true

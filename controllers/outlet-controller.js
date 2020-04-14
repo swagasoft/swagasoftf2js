@@ -108,7 +108,7 @@ const deleteOutlet =  async (req, res)=> {
 
   const searcOutlet = async(req, res)=> {
     const name = req.body.search;
-   await OutletModel.find({"name": {$regex: name, $options:"i"}}, (err, document)=> {
+   await OutletModel.find({"code": {$regex: name, $options:"i"}}, (err, document)=> {
       res.status(200).send({docs: document})
     });
   }
