@@ -6,31 +6,31 @@ var moment = require('moment');
 var fruitSchema = mongoose.Schema({
     product: { type: String, required: true
     },
-    quantity : { type: String, required: true
+    quantity : { type: String, 
     },
-    amount : { type: Number, required: true
+    amount : { type: Number, 
     },
-    damage : { type: String, default:null
+    damage : { type: String, 
     },
     assist_buyer : { type: String, default:null
     },
-    confirmed_by : { type: String, required:true
+    confirmed_by : { type: String, 
     },
     remark : { type: String, default:null
     },
     paid_for : { type: String, default:null
     },
-    size : [{ type: String, required: true 
-    }],
+    size : { type: String, 
+    },
     bottles : { type: Number, default:null
     },
-    buyer : { type: String, required: true
+    buyer : { type: String, 
     },
-       kilo: { type: Number, required: true,
+       kilo: { type: String, 
     },
-        supplier: { type: String, required: true,
+        supplier: { type: String, 
     },
-        driver: { type: String, required: true,
+        driver: { type: String, 
     },
         admin: { type: String, required: true,
     },
