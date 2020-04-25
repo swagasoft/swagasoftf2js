@@ -32,15 +32,16 @@ const submitRecord = async (req, res)=> {
 });
 }
 
-const getSalesRecord = async (req, res)=> {
-    merchantModel.find({}).limit(50).sort({created_at:-1}).then((record)=> {
-        if(record.length == 0){
-            res.status(404).send({msg:'no available record!'});
-        }else{
-            res.status(200).send({record: record});
-        }
-    });
-}
+// const getSalesRecord = async (req, res)=> {
+//     console.log('getSalesRecord')
+//     merchantModel.find({}).sort({created_at:-1}).then((record)=> {
+//         if(record.length == 0){
+//             res.status(404).send({msg:'no available record!'});
+//         }else{
+//             res.status(200).send({record: record});
+//         }
+//     });
+// }
 
 const okSaleRecord = async (req, res)=> {
     const fileId = req.params.id;
@@ -58,8 +59,9 @@ const disproveSale = async (req, res)=> {
     res.status(200).send({msg:'success!'});
 }
 
-const findSalesByDate = async (req, res)=> {
-    merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).sort({created_at:-1}).then((record)=> {
+const monthlySales = async (req, res)=> {
+    console.log('monthlySales','I SEE SALES')
+    merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).sort({created_at:-1}).limit(100).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
@@ -75,15 +77,16 @@ const deleteSales = async (req, res)=> {
 }
 
 const getMerchantRecord = async (req, res)=> {
-    console.log(req.body);
-    merchantModel.find({merchantName: req.body.merchant}).limit(50).then((merchant)=> {
+    console.log('getMerchantRecord',req.body);
+    merchantModel.find({merchantName: req.body.merchant}).then((merchant)=> {
         res.status(200).send({merchant: merchant});
     });
 }
 
-const getByMonth = async (req, res)=> {
+const monthlyMercahntRecord = async (req, res)=> {
+    console.log('getByMonth','GET BY MNOTH')
     merchantModel.find({$and:[{qMonth : req.body.month}
-        ,{qYear: req.body.year},{merchantName:req.body.fullname}]}).limit(50).then((record)=> {
+        ,{qYear: req.body.year},{merchantName:req.body.fullname}]}).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
@@ -91,7 +94,8 @@ const getByMonth = async (req, res)=> {
         }
     });
 }
-const getByDay = async (req, res)=> {
+const dailySales = async (req, res)=> {
+    console.log('dailySales','GETTING BY DAY')
     merchantModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{qDay:req.body.day}]}).then((record)=> {
         if(record.length == 0){
@@ -103,9 +107,9 @@ const getByDay = async (req, res)=> {
 }
 
 const outletSales = async (req, res)=> {
-    console.log(req.body);
+    console.log('outletSales',req.body);
     merchantModel.find({$and:[{qMonth : req.body.month}
-        ,{qYear: req.body.year},{outletCode:req.body.MerchantCode}]}).then((record)=> {
+        ,{qYear: req.body.year},{outletCode:req.body.MerchantCode}]}).sort({created_at:-1}).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
@@ -114,5 +118,5 @@ const outletSales = async (req, res)=> {
     });
 }
 
-module.exports = {findSalesByDate, submitRecord, getSalesRecord, okSaleRecord, verifySaleRecord,
-                deleteSales,outletSales, getMerchantRecord, getByMonth, getByDay, disproveSale}
+module.exports = {monthlySales, submitRecord, okSaleRecord, verifySaleRecord,
+                deleteSales,outletSales, getMerchantRecord, monthlyMercahntRecord, dailySales, disproveSale}
