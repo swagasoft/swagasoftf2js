@@ -47,18 +47,21 @@ const submitStaff = async (req, res)=> {
 }
 
         const getAllStaff =async (req, res)=> {
+            console.log('getAllStaff');
            await  staffModel.find({}).sort({created_at: -1}).then((staff)=> {
                  res.status(200).send({staff: staff});
              });  
         }
 
         const getLimitStaff = async (req, res)=> {
+            console.log('getLimitStaff');
             staffModel.find({}).sort({created_at: -1}).limit(40).then((staff)=> {
                 res.status(200).send({staff: staff});
             })
         }
 
         const getStaffByCategory = async (req, res)=> {
+            console.log('getStaffByCategory');
             let cat = req.params.cat;
             await   staffModel.find({department:cat}).then((staffs)=> {
                 res.status(200).send({staff: staffs});
@@ -144,7 +147,7 @@ const submitStaff = async (req, res)=> {
         }
 
         const getAllPenalize = async (req, res)=> {
-            await penaltyModel.find({}).sort({created_at: -1}).limit(30).then((users)=>{
+            await penaltyModel.find({}).sort({created_at: -1}).limit(25).then((users)=>{
                 if(users.length == 0){
                     res.status(404).send({msg:"No penalty found"});
                 }else{ 
@@ -387,9 +390,9 @@ const submitStaff = async (req, res)=> {
     }
 
     const thisMonthPenalty = async (req, res)=> {
-        console.log(req.body);
+        console.log('thisMonthPenalty')
         penaltyModel.find({$and:[{qMonth : req.body.month} 
-            ,{qYear: req.body.year}]}).sort({created_at:-1}).then((record)=>{
+            ,{qYear: req.body.year}]}).sort({created_at:-1}).limit(50).then((record)=>{
             if(record.length == 0){
                 res.status(404).send({msg:'no record!'});
             }else{

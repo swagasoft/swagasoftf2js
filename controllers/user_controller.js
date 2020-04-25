@@ -262,12 +262,12 @@ const login = (req, res, done)=> {
     }
 
     const thisMonthExpense = async (req, res)=> {
+      console.log('THIS MONT EXENSE ')
       expenseListModel.find({$and:[{qMonth : req.body.month}
-          ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
+          ,{qYear: req.body.year}]}).sort({created_at: -1}).limit(70).then((record)=> {
           if(record.length == 0){
               res.status(404).send({msg:'no record!'});
           }else{
-              console.log(record);
               res.status(200).send({record:record});
           }
       }).catch((err)=> {
@@ -441,7 +441,7 @@ const submitExpense2 =async  (req, res)=> {
 
 const getExpense2 = async (req, res)=> {
   expenseTwoModel.find({$and:[{qMonth : req.body.month}
-    ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
+    ,{qYear: req.body.year}]}).sort({created_at: -1}).limit(40).then((record)=> {
     if(record.length == 0){
         res.status(404).send({msg:'no record!'});
     }else{

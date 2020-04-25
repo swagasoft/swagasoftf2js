@@ -61,7 +61,7 @@ const disproveSale = async (req, res)=> {
 
 const monthlySales = async (req, res)=> {
     console.log('monthlySales','I SEE SALES')
-    merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).sort({created_at:-1}).limit(100).then((record)=> {
+    merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).sort({created_at:-1}).limit(25).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{

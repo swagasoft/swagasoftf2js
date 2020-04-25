@@ -556,7 +556,7 @@ const supplyOutlet = async (req, res)=> {
     
     const productionList = async (req, res)=> {
         // SupplyModel
-        console.log(req.body);
+        console.log('production record',req.body);
         prodModel.find({$and:[{qMonth:req.body.month},
             {qYear:req.body.year}]}).sort({created_at:-1}).then((record)=> {
                 if(record.length == 0){

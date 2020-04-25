@@ -73,6 +73,7 @@ const editfruitSubmit =  (req, res)=> {
 }
 
 const getFruitRecord = async (req, res)=> {
+    console.log('getFruitRecord')
     await FruitModel.find({}).sort({created_at: -1}).limit(50).then((record)=> {
         res.status(200).send({record: record});
     })
@@ -102,7 +103,7 @@ const UnokFruitRecord = async (req, res)=> {
 }
 
 const findFruitbyDate = async (req, res)=> {
-    console.log(req.body);
+    console.log('findFruitbyDate',req.body);
     let queryDate = "";
     console.log(typeof(req.body.day));
     let dayString = req.body.day.toString();
@@ -119,9 +120,9 @@ const findFruitbyDate = async (req, res)=> {
 }
 
 const thisMonthFruit = (req, res)=> {
-    console.log(req.body);
+    console.log('this month',req.body);
     FruitModel.find({$and:[{qMonth:req.body.month},
-        {qYear:req.body.year}]}).sort({created_at:-1}).then((record)=> {
+        {qYear:req.body.year}]}).sort({created_at:-1}).limit(25).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
