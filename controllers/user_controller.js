@@ -262,7 +262,6 @@ const login = (req, res, done)=> {
     }
 
     const thisMonthExpense = async (req, res)=> {
-      console.log('my month avs',req.body);
       expenseListModel.find({$and:[{qMonth : req.body.month}
           ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
           if(record.length == 0){
@@ -271,17 +270,18 @@ const login = (req, res, done)=> {
               console.log(record);
               res.status(200).send({record:record});
           }
-      });
+      }).catch((err)=> {
+        console.log(err);
+        res.status(444).send({msg:'invalid format'});
+      })
     }
 
     const confirmExpense = async (req, res)=> {
-      console.log(req.params.id);
     await  expenseListModel.findByIdAndUpdate({_id:req.params.id},{confirm:true});
       res.status(200).send({msg:'success'});
     }
 
     const unConfirmExpense = async (req, res)=> {
-      console.log(req.params.id);
     await  expenseListModel.findByIdAndUpdate({_id:req.params.id},{confirm:false});
       res.status(200).send({msg:'success'});
     }
@@ -325,7 +325,6 @@ const login = (req, res, done)=> {
     }
 
     const searcExpense = async(req, res)=> {
-      console.log('file',req.body);
       const search = req.body.search;
       await expenseListModel.find({$and:[{"information": {$regex: search, $options:"i"}}
       ,{qMonth:req.body.month},{qYear:req.body.year}]} ,(err, expenses)=> {
@@ -364,20 +363,21 @@ const login = (req, res, done)=> {
     }
 
     const findExpensebyDate = async (req, res)=> {
-      console.log(req.body);
+      console.log('dayyyyyyyyy',req.body);
       let queryDate = "";
-      let dayString = req.body.dp.day.toString();
-      let yearString = req.body.dp.year.toString();
-      let monthString = req.body.dp.month.toString();
+      let dayString = req.body.day.toString();
+      let yearString = req.body.year.toString();
+      let monthString = req.body.month.toString();
       queryDate = monthString +'/'+dayString+'/'+yearString;
       console.log('dateee',queryDate);
       await expenseListModel.find({day : queryDate}).then((expenses)=>{
-          console.log(expenses);
           if(expenses.length == 0){
-              res.status(404).send({msg:'no record for this day!'});
+              res.status(444).send({msg:'no record for this day!'});
           }else{
               res.status(200).send({expenses: expenses});
           }
+      }).catch((err)=>{
+        res.status(406).send({msg:'value not accepted!'});
       })
     }
 
