@@ -363,14 +363,8 @@ const login = (req, res, done)=> {
     }
 
     const findExpensebyDate = async (req, res)=> {
-      console.log('dayyyyyyyyy',req.body);
-      let queryDate = "";
-      let dayString = req.body.day.toString();
-      let yearString = req.body.year.toString();
-      let monthString = req.body.month.toString();
-      queryDate = monthString +'/'+dayString+'/'+yearString;
-      console.log('dateee',queryDate);
-      await expenseListModel.find({day : queryDate}).then((expenses)=>{
+      await expenseListModel.find({$and:[{qMonth : req.body.month}
+        ,{qYear: req.body.year},{qDay:req.body.day}]}).then((expenses)=>{
           if(expenses.length == 0){
               res.status(444).send({msg:'no record for this day!'});
           }else{
@@ -379,6 +373,8 @@ const login = (req, res, done)=> {
       }).catch((err)=>{
         res.status(406).send({msg:'value not accepted!'});
       })
+
+    
     }
 
 

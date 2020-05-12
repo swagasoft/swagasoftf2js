@@ -87,7 +87,7 @@ router.get('/un-ok-fruit-record:id', jwt_helper.verifyJwtToken,checkValidity, fr
 router.get('/disprove-fruit-record:id', jwt_helper.verifyJwtToken,checkValidity, fruitController.disproveFruit);
 router.post('/find-fruit-by-date', jwt_helper.verifyJwtToken,checkValidity, fruitController.findFruitbyDate);
 router.post('/edit-fruit-sm', jwt_helper.verifyJwtToken,checkValidity, fruitController.editfruitSubmit);
-router.post('/get-some-data', jwt_helper.verifyJwtToken,checkValidity, merchantController.monthlySales);
+router.post('/merchant-sales', jwt_helper.verifyJwtToken,checkValidity, merchantController.monthlySales);
 router.get('/get-all-merchant', jwt_helper.verifyJwtToken,checkValidity, OutletController.getAllMerchant);
 router.post('/submit-merchant-sales', jwt_helper.verifyJwtToken,checkValidity,merchantController.submitRecord);
 // router.get('/get-sales-record', jwt_helper.verifyJwtToken,checkValidity,merchantController.getSalesRecord);

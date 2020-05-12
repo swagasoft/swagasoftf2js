@@ -78,15 +78,20 @@ const deleteSales = async (req, res)=> {
 
 const getMerchantRecord = async (req, res)=> {
     console.log('getMerchantRecord',req.body);
-    merchantModel.find({merchantName: req.body.merchant}).then((merchant)=> {
-        res.status(200).send({merchant: merchant});
+    merchantModel.find({$and:[{qMonth : req.body.month}
+        ,{qYear: req.body.year},{merchantName:req.body.merchant}]}).then((merchant)=> {
+        if(merchant.length == 0){
+            res.status(404).send({msg:'no record!'});
+        }else{
+            res.status(200).send({merchant:merchant});
+        }
     });
 }
 
 const monthlyMercahntRecord = async (req, res)=> {
-    console.log('getByMonth','GET BY MNOTH')
+    console.log('getByMonth','GET BY MNOTH',req.body)
     merchantModel.find({$and:[{qMonth : req.body.month}
-        ,{qYear: req.body.year},{merchantName:req.body.fullname}]}).then((record)=> {
+        ,{qYear: req.body.year},{merchantName:req.body.merchant}]}).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
