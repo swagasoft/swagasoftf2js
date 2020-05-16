@@ -25,7 +25,7 @@ router.get('/delete-outlet:id', jwt_helper.verifyJwtToken,checkValidity,OutletCo
 router.post('/update-merchant-rate', jwt_helper.verifyJwtToken,checkValidity,OutletController.updateMerchantRate);
 router.get('/get-all-users', jwt_helper.verifyJwtToken,checkValidity, userController.getAllUsers);
 router.post('/create-outlet', jwt_helper.verifyJwtToken,checkValidity,OutletController.createOutlet);
-router.get('/get-all-oulets', jwt_helper.verifyJwtToken,checkValidity,OutletController.getAll);
+router.get('/get-all-outlets', jwt_helper.verifyJwtToken,checkValidity,OutletController.getAll);
 router.post('/search-outlet', jwt_helper.verifyJwtToken,checkValidity,OutletController.searcOutlet);
 router.post('/edit-outlet', jwt_helper.verifyJwtToken,checkValidity, OutletController.editOutlet);
 router.post('/update-balance', jwt_helper.verifyJwtToken,checkValidity, userController.updateBalance);

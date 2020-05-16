@@ -83,10 +83,10 @@ const editOutlet = async(req, res)=> {
 
 
 const getAll = async (req, res)=> {
+  console.log('GETTING all OUTLETS')
     OutletModel.find({}).sort({created_at: -1}).then((docs)=> {
-      res.status(200).send(docs);
+      res.status(200).send({outlets: docs});
     });
-    
 }
 
 const deleteOutlet =  async (req, res)=> {
