@@ -37,7 +37,7 @@ router.get('/get-expenses', jwt_helper.verifyJwtToken,checkValidity, userControl
 router.get('/confirm-expense:id', jwt_helper.verifyJwtToken,checkValidity, userController.confirmExpense);
 router.get('/un-confirm-expense:id', jwt_helper.verifyJwtToken,checkValidity, userController.unConfirmExpense);
 
-router.get('/get-credit', jwt_helper.verifyJwtToken,checkValidity, userController.getCredit);
+router.put('/get-credit', jwt_helper.verifyJwtToken,checkValidity, userController.getCredit);
 router.get('/get-balance', jwt_helper.verifyJwtToken,checkValidity, userController.getBalance);
 router.get('/verify-expense:id', jwt_helper.verifyJwtToken,checkValidity,  userController.verifyExpense);
 router.post('/find-by-date', jwt_helper.verifyJwtToken,checkValidity, userController.findExpensebyDate);

@@ -242,9 +242,21 @@ const login = (req, res, done)=> {
       });
     }
 
+    // const getCredit = async (req, res)=> {
+    //   creditModel.find({}).sort({created_at : -1}).limit(20).then((credits)=> {
+    //     res.status(200).send({credits});
+    //   });
+
+    // }
     const getCredit = async (req, res)=> {
-      creditModel.find({}).sort({created_at : -1}).limit(20).then((credits)=> {
+      console.log(req.body);
+      creditModel.find({$and:[{qMonth : req.body.month}
+        ,{qYear: req.body.year}]}).sort({created_at : -1}).limit(20).then((credits)=> {
+       if(credits.length == 0){
+        res.status(404).send({msg: 'no record for selected month!'});
+       }else{
         res.status(200).send({credits});
+       }
       });
 
     }
