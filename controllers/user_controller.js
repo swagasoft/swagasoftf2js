@@ -19,7 +19,7 @@ const login = (req, res, done)=> {
     UserModel.findOne({phone:phone},(errr, user)=> {
       //  unknown user
       if(!user){
-        res.status(404).send([' User not exist.']);
+        res.status(404).send({message: 'User not exist.'});
       }else{
     let AppUser = user.phone;
     let databasePassword = user.password;
@@ -31,7 +31,7 @@ const login = (req, res, done)=> {
           res.json({"token":token ,  doc: lodash.pick(user, ['role','user_id', 'balance','email','username'])});
     
         }else{
-          res.status(401).send([ ' Invalid User Credentials.']);
+          res.status(401).send({message: ' Invalid User Credentials.'});
         }
     }
     });
@@ -49,25 +49,25 @@ const login = (req, res, done)=> {
       user.password = crypePassword;
       user.save().then((newuser, err)=> {
         if(!err){
-          response.status(200).send(['operation successful...']);
+          response.status(200).send({message: 'operation successful...'});
         }else{
-          response.status(500).send(['Error in user information']);
+          response.status(500).send({message : 'Error in user information'});
         }
 
       }).catch((err)=> {
         console.log(err);
         if(err.errors.username){
-          response.status(422).send(['Username has been taken!']);
+          response.status(422).send({message: 'Username has been taken!'});
         }else if(err.errors.phone){
-          response.status(499).send(['Phone number has been used or has error!']);
+          response.status(499).send({message: 'Phone number has been used or has error!'});
         }else if(err.errors.role){
-          response.status(499).send([' Role not  submitted!']);
+          response.status(499).send({message: ' Role not  submitted!'});
         }else{
-          response.status(501).send(['eror in user information']);
+          response.status(501).send({message: 'eror in user information'});
         }
       });
     }else{
-      response.status(499).send([' Role not  submitted!']);
+      response.status(499).send({message: ' Role not  submitted!'});
     }
     }
 
@@ -185,7 +185,7 @@ const login = (req, res, done)=> {
       console.log(req.body,'expense 2')
       expenseTwoModel.findById({_id:req.body.id}).then((record)=> {
         if(record.confirm || record.verify){
-          res.status(422).send({msg:'edit is closed!'});
+          res.status(422).send({msg:'Failed... edit is locked!'});
         }else{
         if(record.admin == req.body.admin){
           record.edit += 1;
@@ -223,8 +223,6 @@ const login = (req, res, done)=> {
         record.receiver = req.body.receiver;
         record.information = req.body.information;
         record.save().then((editedexpense)=> {
-          console.log('old',oldExpense)
-          console.log('new',editedexpense)
           expenseAccountModel.findOne({}).then((account)=> {
             account.balance += oldExpense.amountPaid;
             account.balance -= editedexpense.amountPaid;
@@ -253,7 +251,7 @@ const login = (req, res, done)=> {
       creditModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year}]}).sort({created_at : -1}).limit(20).then((credits)=> {
        if(credits.length == 0){
-        res.status(404).send({msg: 'no record for selected month!'});
+        res.status(404).send({msg: 'No record for selected date!'});
        }else{
         res.status(200).send({credits});
        }
@@ -278,7 +276,7 @@ const login = (req, res, done)=> {
       expenseListModel.find({$and:[{qMonth : req.body.month}
           ,{qYear: req.body.year}]}).sort({created_at: -1}).limit(70).then((record)=> {
           if(record.length == 0){
-              res.status(404).send({msg:'no record!'});
+              res.status(404).send({msg:'no record for selected Month!'});
           }else{
               res.status(200).send({record:record});
           }
@@ -341,7 +339,7 @@ const login = (req, res, done)=> {
       await expenseListModel.find({$and:[{"information": {$regex: search, $options:"i"}}
       ,{qMonth:req.body.month},{qYear:req.body.year}]} ,(err, expenses)=> {
          if(expenses.length == 0) {
-             res.status(404).send({msg:'no record!'})
+             res.status(404).send({msg:'no record found!'})
          }else{
            res.status(200).send({expenses:expenses});
          }
@@ -378,7 +376,7 @@ const login = (req, res, done)=> {
       await expenseListModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{qDay:req.body.day}]}).then((expenses)=>{
           if(expenses.length == 0){
-              res.status(444).send({msg:'no record for this day!'});
+              res.status(444).send({msg:'No sales for selected date!'});
           }else{
               res.status(200).send({expenses: expenses});
           }
@@ -451,7 +449,7 @@ const getExpense2 = async (req, res)=> {
   expenseTwoModel.find({$and:[{qMonth : req.body.month}
     ,{qYear: req.body.year}]}).sort({created_at: -1}).limit(40).then((record)=> {
     if(record.length == 0){
-        res.status(404).send({msg:'no record!'});
+        res.status(404).send({msg:'no record for selected MONTH!'});
     }else{
         console.log(record);
         res.status(200).send({record:record});
@@ -471,7 +469,7 @@ const expense2byDate = async (req, res)=> {
   await expenseTwoModel.find({day : queryDate}).then((expenses)=>{
       console.log(expenses);
       if(expenses.length == 0){
-          res.status(404).send({msg:'no record for this day!'});
+          res.status(404).send({msg:'No sales for selected date!'});
       }else{
           res.status(200).send({expenses: expenses});
       }

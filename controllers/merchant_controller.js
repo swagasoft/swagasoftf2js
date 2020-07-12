@@ -63,7 +63,7 @@ const monthlySales = async (req, res)=> {
     console.log('monthlySales','I SEE SALES')
     merchantModel.find({$and:[{qMonth : req.body.month},{qYear: req.body.year}]}).sort({created_at:-1}).limit(25).then((record)=> {
         if(record.length == 0){
-            res.status(404).send({msg:'no record!'});
+            res.status(404).send({msg:'no record for selected month!'});
         }else{
             res.status(200).send({record:record});
         }
@@ -104,7 +104,7 @@ const dailySales = async (req, res)=> {
     merchantModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{qDay:req.body.day}]}).then((record)=> {
         if(record.length == 0){
-            res.status(404).send({msg:'no record!'});
+            res.status(404).send({msg:'No sales for selected date!'});
         }else{
             res.status(200).send({record:record});
         }
@@ -116,7 +116,7 @@ const outletSales = async (req, res)=> {
     merchantModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{outletCode:req.body.MerchantCode}]}).sort({created_at:-1}).then((record)=> {
         if(record.length == 0){
-            res.status(404).send({msg:'no record!'});
+            res.status(404).send({msg:'No sales for selected date'});
         }else{
             res.status(200).send({record:record});
         }

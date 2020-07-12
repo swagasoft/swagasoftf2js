@@ -55,7 +55,7 @@ const submitStaff = async (req, res)=> {
 
         const getLimitStaff = async (req, res)=> {
             console.log('getLimitStaff');
-            staffModel.find({}).sort({created_at: -1}).limit(40).then((staff)=> {
+            staffModel.find({}).sort({created_at: -1}).then((staff)=> {
                 res.status(200).send({staff: staff});
             })
         }
