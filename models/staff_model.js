@@ -45,6 +45,8 @@ var staffSchema = mongoose.Schema({
     },
      AmountPaid: { type: Number, default: 0
     },
+     location: { type: String
+    },
 
 });
 staffSchema.plugin(uniqueValidator);

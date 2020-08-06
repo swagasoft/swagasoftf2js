@@ -126,6 +126,7 @@ router.get('/un-confirm-supply:id', jwt_helper.verifyJwtToken,checkValidity,dist
 router.get('/verify-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.verifySupply);
 router.get('/un-verify-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.unVerifySupply);
 router.post('/update-supply', jwt_helper.verifyJwtToken,checkValidity,distController.updateSupply);
+router.put('/update-stafe', jwt_helper.verifyJwtToken,checkValidity, staffController.updateStaff);
 
 
 

@@ -5,6 +5,7 @@ const OutletModel = mongoose.model('Outlet');
 
 const createOutlet = async(req, res)=> {
     var newModel = new OutletModel();
+    console.log(req.body)
         newModel.name = req.body.name;
         const codeToUpper = req.body.code.toUpperCase();
         newModel.code =  codeToUpper;
@@ -22,7 +23,6 @@ const createOutlet = async(req, res)=> {
         newModel.c_max = req.body.c_max;
         newModel.s_max = req.body.s_max;
         newModel.slg_max = req.body.slg_max;
-        newModel.axis = req.body.axis;
         newModel.location = req.body.location;
         newModel.merchant_rate = req.body.merchant_rate;
      
@@ -44,7 +44,7 @@ const createOutlet = async(req, res)=> {
 
 
 const editOutlet = async(req, res)=> {
-  console.log(req.body);
+  console.log('eddittt',req.body);
   OutletModel.findById({_id: req.body.id},(err, outlet)=> {
     if(outlet.admin != req.body.admin){
       res.status(401).send({msg:'AUTHORIZATION ERROR!'})
@@ -83,8 +83,8 @@ const editOutlet = async(req, res)=> {
 
 
 const getAll = async (req, res)=> {
-  console.log('GETTING all OUTLETS')
     OutletModel.find({}).sort({created_at: -1}).then((docs)=> {
+      
       res.status(200).send({outlets: docs});
     });
 }
@@ -100,9 +100,14 @@ const deleteOutlet =  async (req, res)=> {
   }
 
   const findOutletbyId = async (req, res) =>{
-    OutletModel.findById({_id: req.params.id}).then((outlet)=> {
-      res.status(200).send({outlet: outlet});
-    });
+   var outlet = await OutletModel.findById({_id: req.params.id});
+   console.log('SPECIFIELD OUTLET',outlet.location)
+   staffModel.find({location: outlet.location}).then((merchantInLocation)=>{
+     console.log('STAFF  IN LOCATION',merchantInLocation)
+     res.status(200).send({outlet: outlet, merchant: merchantInLocation});
+   })
+     
+   
    
   }
 

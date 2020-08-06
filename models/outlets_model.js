@@ -39,8 +39,7 @@ var outletSchema = mongoose.Schema({
     edit: { type: Number, default:0
     },
 
-    axis: { type: String, required: true,
-    },
+   
      location: { type: String, required: true,
     }, 
 

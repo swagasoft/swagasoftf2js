@@ -8,7 +8,7 @@ const payRecordModel = mongoose.model('pay_record');
 var moment = require('moment');
 
 
-const submitStaff = async (req, res)=> {
+const submitStaff = async (req, res)=> { 
     console.log(req.body);
     let banktoUpp = req.body.bank.toUpperCase();
     var newStaff = new staffModel();
@@ -20,6 +20,9 @@ const submitStaff = async (req, res)=> {
         newStaff.bankAccountName = banktoUpp;
         newStaff.address = req.body.address; 
         newStaff.admin = req.body.admin;
+        if(req.body.location){
+            newStaff.location = req.body.location;
+        }
         newStaff.bankNumber = req.body.accountNumber;
         newStaff.bankAccountType = req.body.accountType;
         newStaff.save().then((newuser, err)=> {
@@ -45,6 +48,34 @@ const submitStaff = async (req, res)=> {
               }
           });
 }
+
+
+            const updateStaff = async (req, res)=> {
+                console.log(req.body);
+                staffModel.findOne({_id: req.body.id}).then((staff)=> {
+                    staff.fullname = req.body.fullname;
+                    staff.phone = req.body.phone;
+                    staff.department = req.body.department;
+                    staff.bankName = req.body.bankName;
+                    staff.bankNumber = req.body.bankNumber;
+                    staff.bankAccountType = req.body.bankAccountType;
+                    staff.bankAccountName = req.body.bankAccountName;
+                    if(req.body.location){
+                        staff.location = req.body.location;
+                    }
+                    staff.address = req.body.address;
+                    staff.admin = req.body.admin;
+                    staff.save((err, docs)=> {
+                        if(err){
+                            res,status(422).send({msg:'error saving staff record'});
+                        }else{
+                            res.status(200).send({msg: 'record updated successful!'});
+                        }
+                    })
+                })
+            }
+
+
 
         const getAllStaff =async (req, res)=> {
             console.log('getAllStaff');
@@ -500,4 +531,4 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
         thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment, verifyPenalty, unverifyPenalty,
-        confirmPenalty,unConfirmPenalty}
+        confirmPenalty,unConfirmPenalty, updateStaff}
