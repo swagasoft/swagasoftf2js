@@ -46,9 +46,6 @@ const createOutlet = async(req, res)=> {
 const editOutlet = async(req, res)=> {
   console.log('eddittt',req.body);
   OutletModel.findById({_id: req.body.id},(err, outlet)=> {
-    if(outlet.admin != req.body.admin){
-      res.status(401).send({msg:'AUTHORIZATION ERROR!'})
-    }else{
 
       const codeToUpper = req.body.code.toUpperCase();
       outlet.code =  codeToUpper;
@@ -71,7 +68,7 @@ const editOutlet = async(req, res)=> {
       outlet.save().then(()=>{
         res.status(200).send({msg:'success!'})
       })
-    }
+    
   }).catch((err)=> {
     console.log(err);
     res.status(403).send({msg:'error updating record'})
