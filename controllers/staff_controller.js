@@ -19,6 +19,8 @@ const submitStaff = async (req, res)=> {
         newStaff.department = req.body.department;
         newStaff.bankAccountName = banktoUpp;
         newStaff.address = req.body.address; 
+        newStaff.startDate = req.body.startDate;
+        newStaff.location = req.body.location;
         newStaff.admin = req.body.admin;
         if(req.body.location){
             newStaff.location = req.body.location;
@@ -60,6 +62,7 @@ const submitStaff = async (req, res)=> {
                     staff.bankNumber = req.body.bankNumber;
                     staff.bankAccountType = req.body.bankAccountType;
                     staff.bankAccountName = req.body.bankAccountName;
+                    staff.startDate = req.body.startDate;
                     if(req.body.location){
                         staff.location = req.body.location;
                     }

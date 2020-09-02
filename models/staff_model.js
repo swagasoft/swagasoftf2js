@@ -47,6 +47,8 @@ var staffSchema = mongoose.Schema({
     },
      location: { type: String
     },
+     startDate: { type: String
+    },
 
 });
 staffSchema.plugin(uniqueValidator);
