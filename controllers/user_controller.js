@@ -240,6 +240,40 @@ const login = (req, res, done)=> {
       });
     }
 
+
+    const updateReturn = async(req, res)=> {
+      let oldExpense = await expenseListModel.findById({_id:req.body.id});
+      expenseListModel.findById({_id:req.body.id}).then((record)=> {
+      if(record.admin == req.body.admin){
+        if(record.confirm || record.verify){
+          res.status(422).send({msg:'EDIT PERIOD CLOSED!'})
+        }else{
+
+        record.edit += 1;
+        record.description = req.body.description;
+        record.product = req.body.product;
+        record.product = req.body.product;
+        record.amountPaid = req.body.amountPaid;
+        record.receiver = req.body.receiver;
+        record.information = req.body.information;
+        record.save().then((editedexpense)=> {
+          expenseAccountModel.findOne({}).then((account)=> {
+            account.balance -= oldExpense.amountPaid;
+            account.balance += editedexpense.amountPaid;
+            account.save(()=> {
+              res.status(200).send({msg:'edited successful!y'})
+            })
+          });
+
+        })
+      }
+        // ens else
+      }else{
+        res.status(412).send({msg:'unauthorize!'});
+      }
+      });
+    }
+
     // const getCredit = async (req, res)=> {
     //   creditModel.find({}).sort({created_at : -1}).limit(20).then((credits)=> {
     //     res.status(200).send({credits});
@@ -482,4 +516,4 @@ module.exports = {activateUser, login, createUser, getAllUsers, getCredit, expen
   getExpense, getBalance, verifyExpense, reverseExpense, selectExpenseByCat,updateExpenseTwo,
   searcExpense, getUserDetails, resetPassword,findExpensebyDate, thisMonthExpense ,
   confirmExpense, updateExpense, returnExpense, lastCredit, submitExpense2, getExpense2,
-  unConfirmExpense}
+  unConfirmExpense, updateReturn}

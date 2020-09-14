@@ -102,6 +102,7 @@ router.post('/find-outlet-sales', jwt_helper.verifyJwtToken,checkValidity,mercha
 router.get('/get-limit-staff', jwt_helper.verifyJwtToken,checkValidity, staffController.getLimitStaff);
 router.post('/this-month-advs', jwt_helper.verifyJwtToken,checkValidity, staffController.thisMonthAdvs);
 router.put('/update-expense', jwt_helper.verifyJwtToken,checkValidity,userController.updateExpense);
+router.put('/update-return', jwt_helper.verifyJwtToken,checkValidity,userController.updateReturn);
 router.post('/update-expense-two', jwt_helper.verifyJwtToken,checkValidity,userController.updateExpenseTwo);
 router.get('/reset-payroll', jwt_helper.verifyJwtToken,checkValidity, staffController.resetPayRoll);
 router.post('/get-pay-record', jwt_helper.verifyJwtToken,checkValidity, staffController.getPayRecord);
