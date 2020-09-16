@@ -536,7 +536,7 @@ const submitStaff = async (req, res)=> {
     const changeStatus = async (req, res)=> {
         console.log(req.body);
         await staffModel.updateOne({_id: req.body.id}, {active:req.body.active});
-        res.status(200).send({msg:' success'});
+        // res.status(200).send({msg:' success'});
         
     }
 
