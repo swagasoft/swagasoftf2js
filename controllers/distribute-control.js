@@ -553,7 +553,22 @@ const supplyOutlet = async (req, res)=> {
             })
       
     }
+
+    const outletSuppliesdaily = async (req, res)=> {
+        // SupplyModel
+        console.log(req.body);
+        SupplyModel.find({$and:[{qDay: req.body.day},{qMonth:req.body.month},
+            {qYear:req.body.year},{outlet:req.body.outletCode}]}).sort({created_at:-1}).then((record)=> {
+                if(record.length == 0){
+                    res.status(404).send({msg:'no record!'});
+                }else{
+                    res.status(200).send({record:record});
+                }
+            })
+      
+    }
     
+
     const productionList = async (req, res)=> {
         // SupplyModel
         console.log('production record',req.body);
@@ -581,4 +596,5 @@ const supplyOutlet = async (req, res)=> {
 
 module.exports = {submitProd,submitReturns, getProduction, sumbitBadStock, supplyOutlet, closeRecord,
                 editProduction, UnConfirmProd, confirmProd,editBadStock, outletSupplies, productionList,
-                confirmSupply,unConfirmSupply,verifySupply,unVerifySupply, updateSupply, prodByDate}
+                confirmSupply,unConfirmSupply,verifySupply,unVerifySupply, updateSupply, prodByDate,
+                outletSuppliesdaily}

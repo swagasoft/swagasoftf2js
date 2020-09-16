@@ -38,7 +38,7 @@ const editfruitSubmit =  (req, res)=> {
    FruitModel.findById({_id:fileId}).then((record)=> {
         if (record.admin == req.body.admin){
             if(record.confirm || record.verify){
-                res.status(412).send({msg:'sorry, edit access is cloded!'})
+                res.status(412).send({msg:'sorry, edit access is closed!'})
             }else{
             
             record.edit += 1;

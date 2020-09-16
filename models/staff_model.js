@@ -49,6 +49,9 @@ var staffSchema = mongoose.Schema({
     },
      startDate: { type: String
     },
+    active: { type: Boolean, default: true
+    },
+
 
 });
 staffSchema.plugin(uniqueValidator);

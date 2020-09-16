@@ -82,14 +82,22 @@ const submitStaff = async (req, res)=> {
 
         const getAllStaff =async (req, res)=> {
             console.log('getAllStaff');
-           await  staffModel.find({}).sort({created_at: -1}).then((staff)=> {
+           await  staffModel.find({active : true}).sort({created_at: -1}).then((staff)=> {
+               console.log(staff.length);
+                 res.status(200).send({staff: staff});
+             });  
+        }
+
+        const removedStaff =async (req, res)=> {
+            console.log('removed staff');
+           await  staffModel.find({active:false}).sort({created_at: -1}).then((staff)=> {
                  res.status(200).send({staff: staff});
              });  
         }
 
         const getLimitStaff = async (req, res)=> {
             console.log('getLimitStaff');
-            staffModel.find({}).sort({created_at: -1}).then((staff)=> {
+            staffModel.find({active : true}).sort({created_at: -1}).then((staff)=> {
                 res.status(200).send({staff: staff});
             })
         }
@@ -97,7 +105,7 @@ const submitStaff = async (req, res)=> {
         const getStaffByCategory = async (req, res)=> {
             console.log('getStaffByCategory');
             let cat = req.params.cat;
-            await   staffModel.find({department:cat}).then((staffs)=> {
+            await   staffModel.find({$and:[{department:cat},{active:true}]}).then((staffs)=> {
                 res.status(200).send({staff: staffs});
             });
         }
@@ -105,7 +113,7 @@ const submitStaff = async (req, res)=> {
         const payOutByDepartment = async (req, res)=> {
             let cat = req.params.cat;
             console.log(cat);
-            staffModel.find({$and:[{department:cat},{settled:true}]}).then((staff)=> {
+            staffModel.find({$and:[{department:cat},{settled:true},{active: true}]}).then((staff)=> {
                 console.log(staff);
                 res.status(200).send({staff: staff});
             })
@@ -492,7 +500,7 @@ const submitStaff = async (req, res)=> {
 
     const recordDepartment = (req, res)=> {
         payRecordModel.find({$and:[{qMonth : req.body.month}
-                    ,{qYear: req.body.year},{department:req.body.department}]}).then((record)=> {
+                    ,{qYear: req.body.year},{department:req.body.department},{active:true}]}).then((record)=> {
                         if(record.length == 0){
                             res.status(444).send({msg: ' no record!'});
                         }else{
@@ -525,6 +533,14 @@ const submitStaff = async (req, res)=> {
       res.status(200).send({msg:'confirmation success!'});
     }
 
+    const changeStatus = async (req, res)=> {
+        console.log(req.body);
+        await staffModel.updateOne({_id: req.body.id}, {active:req.body.active});
+        // res.status(200).send({msg:' success'});
+        
+    }
+
+
 
 
 
@@ -534,4 +550,4 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
         thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment, verifyPenalty, unverifyPenalty,
-        confirmPenalty,unConfirmPenalty, updateStaff}
+        confirmPenalty,unConfirmPenalty, updateStaff, changeStatus, removedStaff}

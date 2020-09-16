@@ -111,6 +111,7 @@ router.post('/submit-returns',jwt_helper.verifyJwtToken,checkValidity, distContr
 router.get('/confirm-prod:id', jwt_helper.verifyJwtToken,checkValidity,distController.confirmProd);
 router.get('/un-confirm-prod:id', jwt_helper.verifyJwtToken,checkValidity,distController.UnConfirmProd);
 router.post('/get-outlet-supplies', jwt_helper.verifyJwtToken,checkValidity,distController.outletSupplies);
+router.post('/get-outlet-supplies-daily', jwt_helper.verifyJwtToken,checkValidity,distController.outletSuppliesdaily);
 router.post('/production-list', jwt_helper.verifyJwtToken,checkValidity,distController.productionList);
 router.post('/prod-by-date', jwt_helper.verifyJwtToken,checkValidity,distController.prodByDate);
 router.get('/verify-penalty:id', jwt_helper.verifyJwtToken,checkValidity,staffController.verifyPenalty);
@@ -128,6 +129,9 @@ router.get('/verify-supply:id', jwt_helper.verifyJwtToken,checkValidity,distCont
 router.get('/un-verify-supply:id', jwt_helper.verifyJwtToken,checkValidity,distController.unVerifySupply);
 router.post('/update-supply', jwt_helper.verifyJwtToken,checkValidity,distController.updateSupply);
 router.put('/update-stafe', jwt_helper.verifyJwtToken,checkValidity, staffController.updateStaff);
+router.put('/change-staff-status', jwt_helper.verifyJwtToken,checkValidity, staffController.changeStatus);
+router.get('/removed-staffed', jwt_helper.verifyJwtToken,checkValidity, staffController.removedStaff);
+
 
 
 

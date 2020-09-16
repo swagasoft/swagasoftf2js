@@ -410,9 +410,9 @@ const login = (req, res, done)=> {
       await expenseListModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year},{qDay:req.body.day}]}).then((expenses)=>{
           if(expenses.length == 0){
-              res.status(444).send({msg:'No sales for selected date!'});
+              res.status(444).send({msg:'NO EXPENSE FOR THIS DAY'});
           }else{
-              res.status(200).send({expenses: expenses});
+              res.status(200).send({record: expenses});
           }
       }).catch((err)=>{
         res.status(406).send({msg:'value not accepted!'});
