@@ -105,7 +105,8 @@ const submitStaff = async (req, res)=> {
         const getStaffByCategory = async (req, res)=> {
             console.log('getStaffByCategory');
             let cat = req.params.cat;
-            await   staffModel.find({$and:[{department:cat},{active:true}]}).then((staffs)=> {
+            await   staffModel.find({$and:[{department:cat,active: true}]}).then((staffs)=> {
+	console.log(staffs)
                 res.status(200).send({staff: staffs});
             });
         }
