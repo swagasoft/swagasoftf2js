@@ -9,7 +9,6 @@ var moment = require('moment');
 
 
 const submitStaff = async (req, res)=> { 
-    console.log(req.body);
     let banktoUpp = req.body.bank.toUpperCase();
     var newStaff = new staffModel();
         newStaff.fullname = req.body.fullname;
@@ -29,7 +28,6 @@ const submitStaff = async (req, res)=> {
         newStaff.bankAccountType = req.body.accountType;
         newStaff.save().then((newuser, err)=> {
             if(!err){
-                console.log('no error', newuser);
               res.status(200).send({msg :'operation successful...'});
             }else{
               res.status(500).send({msg :'Error in user information'});
@@ -53,7 +51,6 @@ const submitStaff = async (req, res)=> {
 
 
             const updateStaff = async (req, res)=> {
-                console.log(req.body);
                 staffModel.findOne({_id: req.body.id}).then((staff)=> {
                     staff.fullname = req.body.fullname;
                     staff.phone = req.body.phone;
@@ -83,7 +80,6 @@ const submitStaff = async (req, res)=> {
         const getAllStaff =async (req, res)=> {
             console.log('getAllStaff');
            await  staffModel.find({active : true}).sort({created_at: -1}).then((staff)=> {
-               console.log(staff.length);
                  res.status(200).send({staff: staff});
              });  
         }
@@ -105,8 +101,7 @@ const submitStaff = async (req, res)=> {
         const getStaffByCategory = async (req, res)=> {
             console.log('getStaffByCategory');
             let cat = req.params.cat;
-            await   staffModel.find({$and:[{department:cat,active: true}]}).then((staffs)=> {
-	console.log(staffs)
+            await   staffModel.find({department:cat}).then((staffs)=> {
                 res.status(200).send({staff: staffs});
             });
         }
@@ -114,8 +109,7 @@ const submitStaff = async (req, res)=> {
         const payOutByDepartment = async (req, res)=> {
             let cat = req.params.cat;
             console.log(cat);
-            staffModel.find({$and:[{department:cat},{settled:true},{active: true}]}).then((staff)=> {
-                console.log(staff);
+            staffModel.find({department:cat}).then((staff)=> {
                 res.status(200).send({staff: staff});
             })
         }
@@ -128,7 +122,6 @@ const submitStaff = async (req, res)=> {
         }
 
         const penalizeStaff = async (req, res)=> {
-            console.log(req.body);
             let userId = req.body.id;
             let amount = req.body.values.amount; 
             let reason = req.body.values.reason;
@@ -156,7 +149,6 @@ const submitStaff = async (req, res)=> {
         }
 
         const salaryAdvance = async (req, res)=> {
-            console.log(req.body);
             let userId = req.body.id;
             let amount = req.body.values.amount;
             let reason = req.body.values.reason;
@@ -215,8 +207,6 @@ const submitStaff = async (req, res)=> {
         const reason = req.body.values.reason;
         const admin = req.body.admin;
         penaltyModel.findById({_id:req.body.id}).then((document)=> {
-            console.log(admin)
-            console.log(document.admin)
             if(document.admin == admin){
                if(document.confirm || document.verify){
                    res.status(422).send({msg:'CANNOT EDIT RECORD!'})
@@ -272,15 +262,12 @@ const submitStaff = async (req, res)=> {
     }
 
     const findPenaltyDate = async (req, res)=> {
-        console.log(req.body);
         let queryDate = "";
-        console.log(typeof(req.body.day));
         let dayString = req.body.day.toString();
         let yearString = req.body.year.toString();
         let monthString = req.body.month.toString();
         queryDate = monthString +'/'+dayString+'/'+yearString;
         await penaltyModel.find({day : queryDate}).then((users)=>{
-            console.log(users);
             if(users.length == 0){
                 res.status(404).send({msg:'no record for this day!'});
             }else{
@@ -308,7 +295,6 @@ const submitStaff = async (req, res)=> {
     }
 
     const searchPenalty = async (req, res)=> {
-        console.log('file',req.body);
         const search = req.body.search;
        await penaltyModel.find({$and:[{"name": {$regex: search, $options:"i"}}
        ,{qMonth:req.body.month},{qYear:req.body.year}]} ,(err, users)=> {
@@ -322,7 +308,6 @@ const submitStaff = async (req, res)=> {
       }
 
       const searchSalaryAdv = async (req, res)=> {
-        console.log('file',req.body);
         const search = req.body.search;
        await salaryAdvModel.find({"name": {$regex: search, $options:"i"}}, (err, users)=> {
           res.status(200).send({users});
@@ -331,7 +316,6 @@ const submitStaff = async (req, res)=> {
       }
 
     const  settleSalary = async (req, res)=> {
-        console.log(req.body);
         staffModel.findById({_id:req.body.id}).then((staff)=> {
             staff.salary = req.body.salary;
             staff.bonus = req.body.bonus;
@@ -360,7 +344,6 @@ const submitStaff = async (req, res)=> {
                 staff.not_paid = true;
                 staff.settled = false;
             staff.save().then((user)=> {
-                console.log(user);
                 res.status(200).send({msg: ' success'});
             })
             } else{
@@ -371,7 +354,6 @@ const submitStaff = async (req, res)=> {
     }
 
     const searchStaff = async (req, res)=> {
-        console.log(req.body);
         const search = req.body.search;
         staffModel.find({"fullname": {$regex: search, $options:"i"}}, (err, staff)=> {
            
@@ -420,13 +402,11 @@ const submitStaff = async (req, res)=> {
     // }
 
     const thisMonthAdvs = async ( req, res)=> {
-        console.log('my month avs',req.body);
     salaryAdvModel.find({$and:[{qMonth : req.body.month}
         ,{qYear: req.body.year}]}).sort({created_at: -1}).then((record)=> {
         if(record.length == 0){
             res.status(404).send({msg:'no record!'});
         }else{
-            console.log(record);
             res.status(200).send({record:record});
         }
     });
@@ -487,7 +467,6 @@ const submitStaff = async (req, res)=> {
     }
 
     const getPayRecord = (req, res)=> {
-        console.log(req.body);
        payRecordModel.find({$and:[{qMonth : req.body.month} 
             ,{qYear: req.body.year}]}).then((record)=> {
                 if(record.length == 0){
@@ -501,7 +480,7 @@ const submitStaff = async (req, res)=> {
 
     const recordDepartment = (req, res)=> {
         payRecordModel.find({$and:[{qMonth : req.body.month}
-                    ,{qYear: req.body.year},{department:req.body.department},{active:true}]}).then((record)=> {
+                    ,{qYear: req.body.year},{department:req.body.department}]}).then((record)=> {
                         if(record.length == 0){
                             res.status(444).send({msg: ' no record!'});
                         }else{
