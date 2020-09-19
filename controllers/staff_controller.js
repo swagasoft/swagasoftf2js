@@ -46,7 +46,7 @@ const submitStaff = async (req, res)=> {
               }else if(err.errors.department){
                 res.status(422).send({msg :'department is required!'});
               }else{
-                res.status(501).send({msg :'eror exist in user information'});
+                res.status(501).send({msg :'error exist in user information'});
               }
           });
 }
