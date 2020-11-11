@@ -36,7 +36,7 @@ const editfruitSubmit =  (req, res)=> {
     const fileId = req.body.id;
     console.log(req.body);
    FruitModel.findById({_id:fileId}).then((record)=> {
-        if (record.admin == req.body.admin){
+     
             if(record.confirm || record.verify){
                 res.status(412).send({msg:'sorry, edit access is closed!'})
             }else{
@@ -62,10 +62,7 @@ const editfruitSubmit =  (req, res)=> {
             }).catch((err)=> console.log(err))
                 
         }
-            // end
-        }else{
-            res.status(422).send({msg:'not authrorize to edit!'});
-        }
+          
     }).catch((err)=> {
         res.status(400).send({msg:'error in process'});
     })
