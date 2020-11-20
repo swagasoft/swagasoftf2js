@@ -31,8 +31,7 @@ var staffSchema = mongoose.Schema({
     },
     penalize: { type: Boolean, default: false
     },
-    penalizeTreated: { type: Boolean, default: false
-    },
+   
     advance_salary: { type: Number,  default: 0
     },
     edited: { type: Number, default: 0

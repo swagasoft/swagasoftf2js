@@ -32,6 +32,8 @@ var penaltySchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    treated: { type: Boolean, default: false
+    },
 
     confirm : {
         type: Boolean, default: false

@@ -34,7 +34,6 @@ const submitStaff = async (req, res)=> {
             }
     
           }).catch((err)=> {
-            console.log('ERRORR',err);
             if(err.errors.bankNumber){
                 res.status(422).send({msg :'account number already exist!'});
               }else if(err.errors.fullname){
@@ -99,7 +98,6 @@ const submitStaff = async (req, res)=> {
         }
         // {$and:[{department:cat},{active: true}]}
         const getStaffByCategory = async (req, res)=> {
-            console.log('getStaffByCategory');
             let cat = req.params.cat;
             await   staffModel.find({department:cat}).then((staffs)=> {
                 res.status(200).send({staff: staffs});
@@ -108,7 +106,6 @@ const submitStaff = async (req, res)=> {
 
         const payOutByDepartment = async (req, res)=> {
             let cat = req.params.cat;
-            console.log(cat);
             staffModel.find({department:cat}).then((staff)=> {
                 res.status(200).send({staff: staff});
             })
@@ -331,14 +328,12 @@ const submitStaff = async (req, res)=> {
                 res.status(200).send({msg:'successful!'})
             });
         }).catch((err)=> {
-            console.log(err);
             res.status(422).send({msg:'error in submitting document'});
         })
     }
 
     const notPaid = async (req, res)=> {
         const fileId = req.params.id;
-        console.log(fileId);
         staffModel.findById({_id: fileId}).then((staff)=> {
             if(staff){
                 staff.not_paid = true;
@@ -413,7 +408,6 @@ const submitStaff = async (req, res)=> {
     }
 
     const thisMonthPenalty = async (req, res)=> {
-        console.log('thisMonthPenalty')
         penaltyModel.find({$and:[{qMonth : req.body.month} 
             ,{qYear: req.body.year}]}).sort({created_at:-1}).limit(50).then((record)=>{
             if(record.length == 0){
@@ -490,34 +484,34 @@ const submitStaff = async (req, res)=> {
     }
 
     const verifyPenalty = async (req, res)=> {
-        console.log(req.params.id);
       await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{verify: true});
       res.status(200).send({msg:'verification successful!'});
     }
 
     const unverifyPenalty = async (req, res)=> {
-        console.log(req.params.id);
       await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{verify: false});
       res.status(200).send({msg:'unverification!'});
     }
 
     const confirmPenalty = async (req, res)=> {
-        console.log(req.params.id);
       await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{confirm: true});
       res.status(200).send({msg:'confirmation success!'});
     }
 
     const unConfirmPenalty = async (req, res)=> {
-        console.log(req.params.id);
       await  penaltyModel.findByIdAndUpdate({_id:req.params.id},{confirm: false});
       res.status(200).send({msg:'confirmation success!'});
     }
 
     const changeStatus = async (req, res)=> {
-        console.log(req.body);
         await staffModel.updateOne({_id: req.body.id}, {active:req.body.active});
         // res.status(200).send({msg:' success'});
         
+    }
+
+    const updatePenaltyRemark = async (req, res) => {
+       await penaltyModel.updateOne({_id:req.body._id},{treated: req.body.treated});
+        res.status(200).send({msg: 'success'});
     }
 
 
@@ -530,4 +524,4 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
         thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment, verifyPenalty, unverifyPenalty,
-        confirmPenalty,unConfirmPenalty, updateStaff, changeStatus, removedStaff}
+        confirmPenalty,unConfirmPenalty, updateStaff, changeStatus, removedStaff, updatePenaltyRemark}

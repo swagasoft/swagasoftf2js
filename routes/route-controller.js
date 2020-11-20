@@ -131,6 +131,7 @@ router.post('/update-supply', jwt_helper.verifyJwtToken,distController.updateSup
 router.put('/update-stafe', jwt_helper.verifyJwtToken, staffController.updateStaff);
 router.put('/change-staff-status', jwt_helper.verifyJwtToken, staffController.changeStatus);
 router.get('/removed-staffed', jwt_helper.verifyJwtToken, staffController.removedStaff);
+router.put('/update-penalty-remark',jwt_helper.verifyJwtToken, staffController.updatePenaltyRemark )
 
 
 
