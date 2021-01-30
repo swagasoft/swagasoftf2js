@@ -445,9 +445,9 @@ const supplyOutlet = async (req, res)=> {
         newReturn.admin = req.body.admin;
         newReturn.prod_id = req.body.fileId;
         newReturn.created_at = req.body.date;
-        newReturn.qDay = new Date().getDate(req.body.date);
-        newReturn.qMonth = new Date().getMonth(req.body.date) + 1;
-        newReturn.qYear = new Date().getFullYear(req.body.date) ;
+        newReturn.qDay = new Date(req.body.date).getDate();
+        newReturn.qMonth = new Date(req.body.date).getMonth() + 1;
+        newReturn.qYear = new Date(req.body.date).getFullYear() ;
         newReturn.day = moment(req.body.date).format('l') ;
         newReturn.save().then(()=> {
             res.status(200).send({msg:'success'});

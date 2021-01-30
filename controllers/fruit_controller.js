@@ -20,9 +20,9 @@ const registerFruit = async (req, res)=> {
     newFruit.driver = req.body.driver;
     newFruit.admin = req.body.admin;
     newFruit.created_at = req.body.date;
-    newFruit.qDay = new Date().getDate(req.body.date);
-    newFruit.qMonth = new Date().getMonth(req.body.date) + 1;
-    newFruit.qYear = new Date().getFullYear(req.body.date) ;
+    newFruit.qDay = new Date(req.body.date).getDate();
+    newFruit.qMonth = new Date(req.body.date).getMonth() + 1;
+    newFruit.qYear = new Date(req.body.date).getFullYear() ;
     newFruit.day = moment(req.body.date).format('l') ;
     newFruit.save().then(()=> {
         res.status(200).send({msg:'i see you'})

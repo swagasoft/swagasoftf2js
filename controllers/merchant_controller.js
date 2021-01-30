@@ -3,6 +3,8 @@ const merchantModel = mongoose.model('merchant');
 var moment = require('moment');
 
 const submitRecord = async (req, res)=> {
+ try {
+     
     let day = moment(req.body.date).format('l') ;
     await merchantModel.find({$and:[{outletCode: req.body.outletCode},
         {merchantName: req.body.merchantName},{day:day}]}).then((merchant)=> {
@@ -18,11 +20,12 @@ const submitRecord = async (req, res)=> {
     merchantSale.bottles = req.body.bottles;
     merchantSale.amountSold = req.body.amountSold;
     merchantSale.created_at = req.body.date;
-    merchantSale.qDay = new Date().getDate(req.body.date);
-    merchantSale.qMonth = new Date().getMonth(req.body.date) + 1;
-    merchantSale.qYear = new Date().getFullYear(req.body.date) ;
+    merchantSale.m_rate = req.body.rate;
+    merchantSale.qDay = new Date(req.body.date).getDate();
+    merchantSale.qMonth = new Date(req.body.date).getMonth() + 1;
+    merchantSale.qYear = new Date(req.body.date).getFullYear() ;
     merchantSale.day = moment(req.body.date).format('l') ;
-    merchantSale.save().then(()=> { 
+    merchantSale.save().then(( data)=> { 
         res.status(200).send({msg:'submitted successful!!'});
     }).catch((err)=>{
         console.log(err);
@@ -30,6 +33,9 @@ const submitRecord = async (req, res)=> {
     })
 }
 });
+ } catch (error) {
+    res.status(422).send({msg:'extra value required!'});
+ }
 }
 
 // const getSalesRecord = async (req, res)=> {
@@ -121,7 +127,20 @@ const outletSales = async (req, res)=> {
             res.status(200).send({record:record});
         }
     });
+} 
+
+
+const resetMerchantPrice = async (req, res)=> {
+    console.log(' here....',req.body);
+    merchantModel.findOne({_id: req.body.id}).then((record)=> {
+        console.log(record);
+        record.amountSold = req.body.amount;
+        record.m_rate = req.body.rate;
+        record.save().then((record)=> {
+            res.status(200).send({data : record});
+        });
+    });
 }
 
-module.exports = {monthlySales, submitRecord, okSaleRecord, verifySaleRecord,
+module.exports = {monthlySales, submitRecord, okSaleRecord, verifySaleRecord, resetMerchantPrice,
                 deleteSales,outletSales, getMerchantRecord, monthlyMercahntRecord, dailySales, disproveSale}

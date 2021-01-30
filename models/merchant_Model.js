@@ -53,6 +53,9 @@ var merchantSchema = mongoose.Schema({
     },
     qYear :{
         type:Number, 
+    },
+    m_rate :{
+        type:Number
     }
 
 });

@@ -132,9 +132,9 @@ const submitStaff = async (req, res)=> {
                     newPenalty.admin = admin;
                     newPenalty.reason = reason;
                     newPenalty.created_at = req.body.date;
-                    newPenalty.qDay = new Date().getDate(req.body.date);
-                    newPenalty.qMonth = new Date().getMonth(req.body.date) + 1;
-                    newPenalty.qYear = new Date().getFullYear(req.body.date) ;
+                    newPenalty.qDay = new Date(req.body.date).getDate();
+                    newPenalty.qMonth = new Date(req.body.date).getMonth() + 1;
+                    newPenalty.qYear = new Date(req.body.date).getFullYear() ;
                     newPenalty.day = moment(req.body.date).format('l') ;
                     newPenalty.save().then(()=> {
                         res.status(200).send({msg: 'success'});
@@ -158,9 +158,9 @@ const submitStaff = async (req, res)=> {
                 newSalaryAdv.admin = admin;
                 newSalaryAdv.reason = reason;
                 newSalaryAdv.created_at = req.body.date;
-                newSalaryAdv.qDay = new Date().getDate(req.body.date);
-                newSalaryAdv.qMonth = new Date().getMonth(req.body.date) + 1;
-                newSalaryAdv.qYear = new Date().getFullYear(req.body.date) ;
+                newSalaryAdv.qDay = new Date(req.body.date).getDate();
+                newSalaryAdv.qMonth = new Date(req.body.date).getMonth() + 1;
+                newSalaryAdv.qYear = new Date(req.body.date).getFullYear() ;
                 newSalaryAdv.day = moment(req.body.date).format('l') ;
                 newSalaryAdv.save().then(()=> {
                     staffModel.findById({_id:userId}).then((staff)=> {
@@ -409,7 +409,7 @@ const submitStaff = async (req, res)=> {
 
     const thisMonthPenalty = async (req, res)=> {
         penaltyModel.find({$and:[{qMonth : req.body.month} 
-            ,{qYear: req.body.year}]}).sort({created_at:-1}).limit(50).then((record)=>{
+            ,{qYear: req.body.year}]}).sort({created_at:-1}).then((record)=>{
             if(record.length == 0){
                 res.status(404).send({msg:'no record!'});
             }else{

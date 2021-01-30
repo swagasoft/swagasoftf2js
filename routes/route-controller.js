@@ -132,6 +132,7 @@ router.put('/update-stafe', jwt_helper.verifyJwtToken, staffController.updateSta
 router.put('/change-staff-status', jwt_helper.verifyJwtToken, staffController.changeStatus);
 router.get('/removed-staffed', jwt_helper.verifyJwtToken, staffController.removedStaff);
 router.put('/update-penalty-remark',jwt_helper.verifyJwtToken, staffController.updatePenaltyRemark )
+router.put('/reset-merchant-price', jwt_helper.verifyJwtToken, merchantController.resetMerchantPrice);
 
 
 
