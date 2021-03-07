@@ -64,6 +64,7 @@ router.post('/find-salary-advbydate', jwt_helper.verifyJwtToken, staffController
 router.post('/delete-salary-advance', jwt_helper.verifyJwtToken, staffController.deleteSalaryAdvance);
 router.post('/find-penalty-date', jwt_helper.verifyJwtToken, staffController.findPenaltyDate);
 router.post('/this-month-penalty', jwt_helper.verifyJwtToken, staffController.thisMonthPenalty);
+router.post('/get-personal-penalty', jwt_helper.verifyJwtToken, staffController.getPersonalPenalty);
 router.post('/edit-penalty', jwt_helper.verifyJwtToken, staffController.editPenalty);
 router.get('/get-user-details', jwt_helper.verifyJwtToken, userController.getUserDetails);
 router.post('/change-password', jwt_helper.verifyJwtToken, userController.resetPassword);

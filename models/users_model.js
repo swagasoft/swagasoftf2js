@@ -57,7 +57,7 @@ userSchema.path('phone').validate((val)=> {
 userSchema.methods.generateJwt = (user)=> {
     var expiry = new Date();
     expiry.setDate(expiry.getDate() + 1);
-    return jwt.sign({_id: user._id, email: user.email,
+    return jwt.sign({_id: user._id, role:user.role, username: user.username,
         exp: parseInt(expiry.getTime() / 1000),},
          process.env.JWT_SECRET);
 }

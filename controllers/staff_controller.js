@@ -5,6 +5,7 @@ const staffModel = mongoose.model('staff');
 const salaryAdvModel = mongoose.model('salary_adv');
 const penaltyModel = mongoose.model('penalty');
 const payRecordModel = mongoose.model('pay_record');
+const merchantProModel = mongoose.model('merchant_pro');
 var moment = require('moment');
 
 
@@ -407,8 +408,10 @@ const submitStaff = async (req, res)=> {
     });
     }
 
-    const thisMonthPenalty = async (req, res)=> {
-        penaltyModel.find({$and:[{qMonth : req.body.month} 
+
+    const getPersonalPenalty = (req, res)=> {
+        console.log(req.body)
+         penaltyModel.find({$and:[{user_id: req.body.user_id ,qMonth : req.body.month} 
             ,{qYear: req.body.year}]}).sort({created_at:-1}).then((record)=>{
             if(record.length == 0){
                 res.status(404).send({msg:'no record!'});
@@ -416,6 +419,39 @@ const submitStaff = async (req, res)=> {
                 res.status(200).send({record: record})
             }
         });
+
+    }
+
+    const thisMonthPenalty = async (req, res)=> {
+        // penaltyModel.find({$and:[{qMonth : req.body.month} 
+        //     ,{qYear: req.body.year}]}).sort({created_at:-1}).then((record)=>{
+        //     if(record.length == 0){
+        //         res.status(404).send({msg:'no record!'});
+        //     }else{
+        //         res.status(200).send({record: record})
+        //     }
+        // });
+
+        // penaltyModel.distinct("name",{$and:[{qMonth : req.body.month} 
+        //         ,{qYear: req.body.year}]}).then((record =>{
+        //     res.status(200).send({record: record})
+        // }));
+
+        // penaltyModel.find({$and:[{qMonth : req.body.month} 
+        //         ,{qYear: req.body.year}]}).distinct("name").then((record =>{
+        //     res.status(200).send({record: record})
+        // }));
+
+        penaltyModel.aggregate([
+            // your where clause: note="test2" and notetwo = "meet2"
+            {"$match" : {"qYear": req.body.year, "qMonth" : req.body.month}}, 
+            // group by key, score to get distinct
+            {"$group" : {_id : {user_id:"$user_id", name:"$name"}}}, 
+            // Clean up the output
+            {"$project" : {_id:0, user_id:"$_id.user_id", name:"$_id.name"}}
+        ]).then((record)=> {
+            res.status(200).send({record: record})
+        })
     }
 
     // reset all staff acoun to zero and save to payRecord.
@@ -515,6 +551,13 @@ const submitStaff = async (req, res)=> {
     }
 
 
+   const newMerchantPro = (req, res) => {
+       console.log(req.body);
+       var newMerchantPro = new merchantProModel();
+       
+   }
+
+
 
 
 
@@ -523,5 +566,6 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
             deleteSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
+        getPersonalPenalty,
         thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment, verifyPenalty, unverifyPenalty,
         confirmPenalty,unConfirmPenalty, updateStaff, changeStatus, removedStaff, updatePenaltyRemark}
