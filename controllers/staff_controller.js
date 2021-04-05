@@ -446,9 +446,9 @@ const submitStaff = async (req, res)=> {
             // your where clause: note="test2" and notetwo = "meet2"
             {"$match" : {"qYear": req.body.year, "qMonth" : req.body.month}}, 
             // group by key, score to get distinct
-            {"$group" : {_id : {user_id:"$user_id", name:"$name"}}}, 
+            {"$group" : {_id : {user_id:"$user_id", name:"$name", hide:"$hide", _id:"$_id"}}}, 
             // Clean up the output
-            {"$project" : {_id:0, user_id:"$_id.user_id", name:"$_id.name"}}
+            {"$project" : {_id:0, user_id:"$_id.user_id", name:"$_id.name", hide:"$_id.hide", _id:"$_id._id" }}
         ]).then((record)=> {
             res.status(200).send({record: record})
         })
@@ -557,6 +557,23 @@ const submitStaff = async (req, res)=> {
        
    }
 
+   const hidePenalty = async (req, res)=> {
+       console.log('ff',req.params.id);
+     try {
+        penaltyModel.findOne({_id: req.params.id}).then((penal => {
+            console.log('PPP', penal);
+            penal.hide = true;
+            penal.save().then(()=> {
+             res.status(200).send({msg : ' updated success'})
+            })
+        }))
+
+     } catch (error) {
+         console.log(error);
+     }
+      
+   }
+
 
 
 
@@ -566,6 +583,6 @@ module.exports = {penalizeStaff, submitStaff, getAllStaff, getStaffByCategory, d
             deleteSalaryAdvance, editPenalty, findPenaltyDate, wavePenalty, deletePenalty,
         searchPenalty, searchSalaryAdv, settleSalary, notPaid, searchStaff, getAllPayout,
         setPaymentFalse, setPaymentTrue, payOutByDepartment, getLimitStaff, thisMonthAdvs,
-        getPersonalPenalty,
+        getPersonalPenalty,hidePenalty,
         thisMonthPenalty, resetPayRoll, getPayRecord,recordDepartment, verifyPenalty, unverifyPenalty,
         confirmPenalty,unConfirmPenalty, updateStaff, changeStatus, removedStaff, updatePenaltyRemark}

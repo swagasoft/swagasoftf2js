@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const merchantModel = mongoose.model('merchant');
+const merchantProModel = mongoose.model('merchant_pro');
 var moment = require('moment');
 
 const submitRecord = async (req, res)=> {
@@ -142,5 +143,73 @@ const resetMerchantPrice = async (req, res)=> {
     });
 }
 
+const submitMerchantPro = (req, res)=> {
+    console.log(req.body);
+    console.log(req.body.list);
+   let storeList = [];
+    storeList = req.body.list;
+   let storeRate = req.body.rate;
+    var newMerchantPro = new merchantProModel();
+    newMerchantPro.merchantName = req.body.name;
+    newMerchantPro.group = req.body.group;
+    newMerchantPro.qMonth = req.body.month;
+    newMerchantPro.qYear = req.body.year;
+    
+    storeList.forEach(element => {
+            newMerchantPro.mixed.push({store:element, bottles: 0, rate: 0});
+    });
+    newMerchantPro.save().then((data)=> {
+        res.status(200).send({data: data});
+    });
+}
+
+
+// const updateBottles = async (req, res)=> {
+//     console.log(req.body);
+
+//     merchantProModel.updateOne({'mixed._id': req.body._id}).then(record => {
+//         console.log('THIS ',record);
+  
+//   let dataStore  =  record.mixed.filter(item => item._id === req.body.id);
+//   console.log("data ", dataStore)
+//   res.status(200).send(dataStore);
+//     });
+
+// }
+
+const updateBottles = async (req, res)=> {
+    console.log(req.body);
+
+    merchantProModel.updateOne({_id: req.body.masterId, "mixed._id": req.body._id},
+     {$set: {"mixed.$.bottles": req.body.bottles} }).then((result)=> {
+         console.log('RESULT ', result)
+        res.status(200).send(result);
+     })
+}
+
+// const updateBottles = async (req, res)=> {
+//     console.log(req.body);
+
+//     const documentId = req.body._id;
+//     merchantProModel.findOne({_id:req.body.masterId},
+//         {_id:0, mixed :{$elemMatch: {store : req.body.store} }}).then(result => {
+//             // console.log(result);
+//             console.log('bottles', result);
+          
+//             res.status(200).send(result);
+//         })
+
+// }
+
+
+const getMerchantPro = (req, res)=> {
+    console.log(req.body);
+    merchantProModel.find({$and:[{qMonth : req.body.month}
+        ,{qYear: req.body.year}]}).then((data)=> {
+            res.status(200).send({data});
+        })
+}
+
 module.exports = {monthlySales, submitRecord, okSaleRecord, verifySaleRecord, resetMerchantPrice,
-                deleteSales,outletSales, getMerchantRecord, monthlyMercahntRecord, dailySales, disproveSale}
+                deleteSales,outletSales, getMerchantRecord, monthlyMercahntRecord, dailySales, disproveSale,
+                submitMerchantPro, getMerchantPro, updateBottles}

@@ -134,6 +134,10 @@ router.put('/change-staff-status', jwt_helper.verifyJwtToken, staffController.ch
 router.get('/removed-staffed', jwt_helper.verifyJwtToken, staffController.removedStaff);
 router.put('/update-penalty-remark',jwt_helper.verifyJwtToken, staffController.updatePenaltyRemark )
 router.put('/reset-merchant-price', jwt_helper.verifyJwtToken, merchantController.resetMerchantPrice);
+router.post('/submit-merchant-pro', jwt_helper.verifyJwtToken, merchantController.submitMerchantPro);
+router.post('/get-merchant-monthly', jwt_helper.verifyJwtToken, merchantController.getMerchantPro);
+router.put('/update-bottles', jwt_helper.verifyJwtToken, merchantController.updateBottles);
+router.get('/hide-penalty:id', jwt_helper.verifyJwtToken, staffController.hidePenalty)
 
 
 
